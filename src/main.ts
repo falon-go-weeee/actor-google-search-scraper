@@ -1,19 +1,36 @@
-const Apify = require('apify');
-const url = require('url');
-const {
-    REQUIRED_PROXY_GROUP, GOOGLE_DEFAULT_RESULTS_PER_PAGE, DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE,
-    GOOGLE_SEARCH_DOMAIN_TO_COUNTRY_CODE, GOOGLE_SEARCH_URL_REGEX } = require('./consts');
-const extractorsDesktop = require('./extractors/desktop');
-const extractorsMobile = require('./extractors/mobile');
-const {
-    getInitialRequests, executeCustomDataFunction, getInfoStringFromResults, createSerpRequest,
-    logAsciiArt, createDebugInfo, ensureAccessToSerpProxy,
-} = require('./tools');
+import Apify from 'apify';
+import url from 'url';
+
+import { DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE, GOOGLE_DEFAULT_RESULTS_PER_PAGE, GOOGLE_SEARCH_DOMAIN_TO_COUNTRY_CODE, GOOGLE_SEARCH_URL_REGEX, REQUIRED_PROXY_GROUP } from './consts';
+import extractorsDesktop from './extractors/desktop';
+import extractorsMobile from './extractors/mobile';
+import { createDebugInfo, createSerpRequest, ensureAccessToSerpProxy, executeCustomDataFunction, getInfoStringFromResults, getInitialRequests, logAsciiArt } from './tools';
 
 const { log } = Apify.utils;
 
+export interface Options {
+    queries: string;
+    countryCode: string;
+    languageCode: string;
+    locationUule: string;
+    resultsPerPage: number;
+    maxPagesPerQuery: number;
+    customDataFunction: string;
+    maxConcurrency: number;
+    saveHtml: boolean;
+    saveHtmlToKeyValueStore: boolean;
+    mobileResults: boolean;
+    includeUnfilteredResults: boolean;
+}
+
+declare module 'apify' {
+    export interface Dataset {
+        datasetId: string;
+    }
+}
+
 Apify.main(async () => {
-    const input = await Apify.getInput();
+    const input = await Apify.getInput() as Options;
 
     const {
         maxConcurrency,
@@ -51,7 +68,6 @@ Apify.main(async () => {
             const parsedUrl = url.parse(request.url, true);
             request.userData.startedAt = new Date();
             log.info(`Querying "${parsedUrl.query.q}" page ${request.userData.page} ...`);
-            return request;
         },
         handlePageTimeoutSecs: 60,
         requestTimeoutSecs: 180,
@@ -66,13 +82,13 @@ Apify.main(async () => {
             const parsedUrl = url.parse(request.url, true);
 
             // We know the URL matches (otherwise we have a bug here)
-            const matches = GOOGLE_SEARCH_URL_REGEX.exec(request.url);
+            const matches = GOOGLE_SEARCH_URL_REGEX.exec(request.url)!;
             const domain = matches[3].toLowerCase();
-            const resultsPerPage = parsedUrl.query.num || GOOGLE_DEFAULT_RESULTS_PER_PAGE;
+            const resultsPerPage = parsedUrl.query.num ? +parsedUrl.query.num : GOOGLE_DEFAULT_RESULTS_PER_PAGE;
             const { host } = parsedUrl;
 
             // Compose the dataset item.
-            const data = {
+            const data: Record<string, unknown> = {
                 '#debug': createDebugInfo(request, response),
                 '#error': false,
                 searchQuery: {
