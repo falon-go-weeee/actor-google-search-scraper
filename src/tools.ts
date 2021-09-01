@@ -1,16 +1,10 @@
-const Apify = require('apify');
-const vm = require('vm');
-const _ = require('underscore');
-const queryString = require('query-string'); // TODO: Use Node default
-const { REQUIRED_PROXY_GROUP } = require('./consts');
-const {
-    DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE,
-    COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN,
-    GOOGLE_SEARCH_URL_REGEX,
-    GOOGLE_DEFAULT_RESULTS_PER_PAGE,
-} = require('./consts');
+import Apify, { Request } from 'apify';
+import vm from 'vm';
+import _ from 'underscore';
+import queryString from 'query-string'; // TODO: Use Node default
+import { COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN, DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE, GOOGLE_DEFAULT_RESULTS_PER_PAGE, GOOGLE_SEARCH_URL_REGEX, REQUIRED_PROXY_GROUP } from './consts';
 
-exports.createSerpRequest = (url, page) => {
+export function createSerpRequest(url: string, page: unknown) {
     if (url.startsWith('https://')) url = url.replace('https://', 'http://');
 
     return {
@@ -19,9 +13,19 @@ exports.createSerpRequest = (url, page) => {
             page,
         },
     };
-};
+}
 
-exports.getInitialRequests = ({
+export interface InitialRequestOptions {
+    queries: string;
+    mobileResults: boolean;
+    countryCode: string;
+    languageCode: string;
+    locationUule: string;
+    resultsPerPage: number;
+    includeUnfilteredResults: boolean;
+}
+
+export function getInitialRequests({
     queries,
     mobileResults,
     countryCode,
@@ -29,7 +33,7 @@ exports.getInitialRequests = ({
     locationUule,
     resultsPerPage,
     includeUnfilteredResults,
-}) => {
+}: InitialRequestOptions) {
     return queries
         .split('\n')
         .map(item => item.trim())
@@ -39,9 +43,9 @@ exports.getInitialRequests = ({
             if (GOOGLE_SEARCH_URL_REGEX.test(queryOrUrl)) return exports.createSerpRequest(queryOrUrl, 0);
 
             // Otherwise consider it as query term ...
-            const domain = COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN[(countryCode || '').toUpperCase()]
+            const domain = COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN[(countryCode || '').toUpperCase() as keyof typeof COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN]
                 || COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN[DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE];
-            const qs = { q: queryOrUrl };
+            const qs: Record<string, unknown> = { q: queryOrUrl };
 
             // NOTE: Don't set the "gl" parameter, some Apify Proxy Google SERP providers cannot handle it!
             if (languageCode) qs.hl = languageCode;
@@ -53,13 +57,13 @@ exports.getInitialRequests = ({
 
             return exports.createSerpRequest(`http://www.${domain}/search?${queryString.stringify(qs)}`, 0);
         });
-};
+}
 
-exports.executeCustomDataFunction = async (funcString, params) => {
+export async function executeCustomDataFunction(funcString: string, params: unknown) {
     let func;
     try {
         func = vm.runInNewContext(funcString);
-    } catch (err) {
+    } catch (err: any) {
         Apify.utils.log.exception(err, 'Cannot compile custom data function!');
         throw err;
     }
@@ -67,9 +71,9 @@ exports.executeCustomDataFunction = async (funcString, params) => {
     if (!_.isFunction(func)) throw new Error('Custom data function is not a function!'); // This should not happen...
 
     return func(params);
-};
+}
 
-exports.getInfoStringFromResults = (results) => {
+export function getInfoStringFromResults(results: Record<string, any>) {
     return _
         .chain({
             organicResults: results.organicResults.length,
@@ -80,9 +84,9 @@ exports.getInfoStringFromResults = (results) => {
         .toArray()
         .join(', ')
         .value();
-};
+}
 
-exports.logAsciiArt = () => {
+export function logAsciiArt() {
     console.log(`
  _______  _______  _______  _______  _______ _________ _        _______
 (  ____ \\(  ____ \\(  ____ )(  ___  )(  ____ )\\__   __/( (    /|(  ____ \\
@@ -101,10 +105,15 @@ exports.logAsciiArt = () => {
 | | \\_  )| |   | || |   | || | \\_  )| |      | (         | |      | |   | || |   | |
 | (___) || (___) || (___) || (___) || (____/\\| (____/\\ _ | (____/\\| (___) || )   ( |
 (_______)(_______)(_______)(_______)(_______/(_______/(_)(_______/(_______)|/     \\|\n`);
-};
+}
 
-exports.createDebugInfo = (request, response) => {
-    let statusCode = null;
+export interface Response {
+    status?: () => number;
+    statusCode?: number;
+}
+
+export function createDebugInfo(request: Request, response?: Response) {
+    let statusCode: number | null | undefined = null;
     if (response) statusCode = _.isFunction(response.status) ? response.status() : response.statusCode;
 
     return {
@@ -116,12 +125,12 @@ exports.createDebugInfo = (request, response) => {
         statusCode,
         durationSecs: (request.userData.finishedAt - request.userData.startedAt) / 1000,
     };
-};
+}
 
-exports.ensureAccessToSerpProxy = async () => {
+export async function ensureAccessToSerpProxy() {
     const userInfo = await Apify.newClient().user().get();
     // Has access to group and nonzero limit.
-    const hasGroupAllowed = userInfo.proxy.groups.filter(group => group.name === REQUIRED_PROXY_GROUP).length > 0;
+    const hasGroupAllowed = userInfo.proxy.groups.filter((group: { name: string }) => group.name === REQUIRED_PROXY_GROUP).length > 0;
     const maxSerps = userInfo.limits
         ? userInfo.limits.monthlyGoogleSerpRequests
         : userInfo.plan.maxMonthlyProxySerps;
@@ -140,4 +149,4 @@ exports.ensureAccessToSerpProxy = async () => {
             + ' Please contact support@apify.com to increase the limit.');
         process.exit(1);
     }
-};
+}
