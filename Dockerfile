@@ -13,4 +13,6 @@ RUN npm --quiet set progress=false \
  && echo "NPM version:" \
  && npm --version
 
+RUN npm run build
+
 ENV APIFY_DISABLE_OUTDATED_WARNING 1
