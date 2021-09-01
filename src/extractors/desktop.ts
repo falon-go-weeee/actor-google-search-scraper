@@ -2,7 +2,7 @@ import { Cheerio, Element, load } from 'cheerio';
 import { ensureItsAbsoluteUrl } from './ensure_absolute_url';
 import { extractPeopleAlsoAsk as _extractPeopleAlsoAsk } from './extractor_tools';
 
-type CheerioRoot = ReturnType<typeof load>;
+export type CheerioRoot = ReturnType<typeof load>;
 
 export interface SiteLink {
     title: string;

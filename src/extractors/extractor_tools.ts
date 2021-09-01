@@ -1,22 +1,31 @@
-const cheerio = require("cheerio");
+import cheerio from 'cheerio';
+import { CheerioRoot } from './desktop';
 
-exports.extractPeopleAlsoAsk = ($) => {
-    const peopleAlsoAsk = [];
+export interface PeopleAlsoAsk {
+    question: string;
+    answer: string;
+    url: string;
+    title: string;
+    date: string;
+}
+
+export function extractPeopleAlsoAsk($: CheerioRoot) {
+    const peopleAlsoAsk: PeopleAlsoAsk[] = [];
 
     // HTML that we need is hidden in escaped script texts
-    const scriptMatches = $('html').html().match(/,\'\\x3cdiv class\\x3d[\s\S]+?\'\)\;\}\)/gi);
+    const scriptMatches = $('html').html()!.match(/,\'\\x3cdiv class\\x3d[\s\S]+?\'\)\;\}\)/gi);
 
     if (Array.isArray(scriptMatches)) {
         const htmls = scriptMatches.map((match) => {
             const escapedHtml = match.replace(',\'', '').replace('\');})', '');
-            const unescaped = escapedHtml.replace(/\\x(\w\w)/g, (match, group) => {
+            const unescaped = escapedHtml.replace(/\\x(\w\w)/g, (_match, group) => {
                 const charCode = parseInt(group, 16);
                 return String.fromCharCode(charCode);
             });
             return unescaped;
         });
 
-        htmls.forEach((html, i) => {
+        htmls.forEach((html) => {
             const $Internal = cheerio.load(html);
 
             // There are might be one extra post that is not really a question
@@ -46,7 +55,7 @@ exports.extractPeopleAlsoAsk = ($) => {
             const result = {
                 question: questionParsedFromHref || questionText,
                 answer,
-                url: $Internal('a').attr('href'),
+                url: $Internal('a').attr('href')!,
                 title: $Internal('a.sXtWJb, a h3').text().trim(),
                 date,
             };
