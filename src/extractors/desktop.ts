@@ -214,7 +214,7 @@ export function extractRelatedQueries($: CheerioRoot, hostname: string | null) {
     $('#brs a, #bres a').each((_index, el) => {
         related.push({
             title: $(el).text(),
-            url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),
+            url: ensureItsAbsoluteUrl($(el).attr('href'), hostname)!,
         });
     });
 
