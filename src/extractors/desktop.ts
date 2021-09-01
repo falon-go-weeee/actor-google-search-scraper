@@ -207,7 +207,7 @@ export interface RelatedItem {
     url: string;
 }
 
-export function extractRelatedQueries($: CheerioRoot, hostname: string | null) {
+export function extractRelatedQueries($: CheerioRoot, hostname?: string | null) {
     const related: RelatedItem[] = [];
 
     // 2021-02-25 - Tiny change #brs -> #bres

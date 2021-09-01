@@ -1,6 +1,7 @@
-const cheerio = require('cheerio');
-const desktopExtractors = require('./desktop');
-const mobileExtractors = require('./mobile');
+import cheerio from 'cheerio';
+import * as desktopExtractors from './desktop';
+import mobileExtractors from './mobile';
+import { CheerioRoot } from './desktop';
 
 /**
  * Extracts paid and organic Google Search Results from provided
@@ -13,7 +14,7 @@ const mobileExtractors = require('./mobile');
  *     organicResults: Array,
  * }}
  */
-exports.extractResults = function extractResults(source, options = {}) {
+export function extractResults(source: CheerioRoot | string, options: { mobile?: boolean } = {}) {
     const $ = typeof source === 'string' ? cheerio.load(source) : source;
     const extractors = options.mobile ? mobileExtractors : desktopExtractors;
     // Some of the extractors use host parameter which is not available in this function
@@ -26,4 +27,4 @@ exports.extractResults = function extractResults(source, options = {}) {
         organicResults: extractors.extractOrganicResults($),
         peopleAlsoAsk: extractors.extractPeopleAlsoAsk($),
     };
-};
+}
