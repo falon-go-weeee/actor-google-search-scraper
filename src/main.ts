@@ -2,7 +2,7 @@ import Apify from 'apify';
 import url from 'url';
 
 import { DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE, GOOGLE_DEFAULT_RESULTS_PER_PAGE, GOOGLE_SEARCH_DOMAIN_TO_COUNTRY_CODE, GOOGLE_SEARCH_URL_REGEX, REQUIRED_PROXY_GROUP } from './consts';
-import extractorsDesktop from './extractors/desktop';
+import * as extractorsDesktop from './extractors/desktop';
 import extractorsMobile from './extractors/mobile';
 import { createDebugInfo, createSerpRequest, ensureAccessToSerpProxy, executeCustomDataFunction, getInfoStringFromResults, getInitialRequests, logAsciiArt } from './tools';
 
@@ -108,7 +108,7 @@ Apify.main(async () => {
                 relatedQueries: extractors.extractRelatedQueries($, host),
                 paidResults: extractors.extractPaidResults($),
                 paidProducts: extractors.extractPaidProducts($),
-                organicResults: extractors.extractOrganicResults($, host),
+                organicResults: extractors.extractOrganicResults($),
                 peopleAlsoAsk: extractors.extractPeopleAlsoAsk($),
                 customData: customDataFunction
                     ? await executeCustomDataFunction(customDataFunction, { input, $, request, response, html: body, Apify })
