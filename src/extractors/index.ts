@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import * as desktopExtractors from './desktop';
-import mobileExtractors from './mobile';
+import * as mobileExtractors from './mobile';
 import { CheerioRoot } from './desktop';
 
 /**

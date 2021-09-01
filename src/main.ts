@@ -3,7 +3,7 @@ import url from 'url';
 
 import { DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE, GOOGLE_DEFAULT_RESULTS_PER_PAGE, GOOGLE_SEARCH_DOMAIN_TO_COUNTRY_CODE, GOOGLE_SEARCH_URL_REGEX, REQUIRED_PROXY_GROUP } from './consts';
 import * as extractorsDesktop from './extractors/desktop';
-import extractorsMobile from './extractors/mobile';
+import * as extractorsMobile from './extractors/mobile';
 import { createDebugInfo, createSerpRequest, ensureAccessToSerpProxy, executeCustomDataFunction, getInfoStringFromResults, getInitialRequests, logAsciiArt } from './tools';
 
 const { log } = Apify.utils;

@@ -1,6 +1,6 @@
 import { Cheerio, Element, load } from 'cheerio';
 import { ensureItsAbsoluteUrl } from './ensure_absolute_url';
-import { extractPeopleAlsoAsk as _extractPeopleAlsoAsk } from './extractor_tools';
+import { extractPeopleAlsoAsk as _extractPeopleAlsoAsk, PeopleAlsoAsk } from './extractor_tools';
 
 export type CheerioRoot = ReturnType<typeof load>;
 
@@ -221,7 +221,6 @@ export function extractRelatedQueries($: CheerioRoot, hostname?: string | null) 
     return related;
 }
 
-// TODO type this properly once extractor_tools.js is converted to ts
-export function extractPeopleAlsoAsk($: CheerioRoot): unknown {
+export function extractPeopleAlsoAsk($: CheerioRoot): PeopleAlsoAsk[] {
     return _extractPeopleAlsoAsk($);
 }
