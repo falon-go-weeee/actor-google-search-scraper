@@ -61,7 +61,7 @@ TS Rewrite notes
     - `shift()!`
     - conflict in names of `extractPeopleAlsoAsk`, aliased import
     - after conversion there are build issues
-        - `extractorsDesktop` - use start import
+        - `extractorsDesktop` - use star import
         - `extractRelatedQueries` need to allow null for hostname too
         - `extractOrganicResults` do not have two parameters
 - now ensure_absolute_url.js, this one is trivial, we just need to support `null` explicitly again

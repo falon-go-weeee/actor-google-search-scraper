@@ -6,6 +6,7 @@
             "url": "https://fi.hotels.com/",
             "displayedUrl": "https://fi.hotels.com",
             "description": "Valitse hotelli yli 140 000 hotellista ympäri maailmaa. Löydä sopiva hotelli sinulle​, luksushotelleista edullisiin ...  \n  Asiakaspalveluportaali   ·   About Us   ·   Hotellit Suomi   ·   Hotels.com® Rewards",
+            "emphasizedKeywords": [],
             "siteLinks": [
                 {
                     "title": "Asiakaspalveluportaali",
@@ -34,6 +35,7 @@
             "url": "https://fi.hotels.com/hotellitarjoukset/",
             "displayedUrl": "https://fi.hotels.com › hotellitarjoukset",
             "description": "Lue hotellikuvauksia ja arvosteluja, katsele karttoja ja valokuvia.",
+            "emphasizedKeywords": [],
             "siteLinks": []
         },
         {
@@ -41,6 +43,7 @@
             "url": "https://fi.hotels.com/co10233054/hotellit-suomi/",
             "displayedUrl": "https://fi.hotels.com › hotellit-suomi",
             "description": "Vertaile ja varaa halpa hotelli kohteessa Suomi Hotels.comilta.",
+            "emphasizedKeywords": [],
             "siteLinks": []
         },
         {
@@ -48,6 +51,7 @@
             "url": "https://www.sokoshotels.fi/",
             "displayedUrl": "https://www.sokoshotels.fi",
             "description": "Saat edulliset hinnat ja Bonusta varaamalla hotellin suoraan meiltä.",
+            "emphasizedKeywords": [],
             "siteLinks": []
         },
         {
@@ -55,6 +59,7 @@
             "url": "https://www.finlandiahotels.fi/",
             "displayedUrl": "https://www.finlandiahotels.fi",
             "description": "Finlandia Hotels on yksityinen suomalainen hotelliketju, jonka hotellit toimivat persoonallisesti ja paikallisesti.  \n  Hotellit   ·   Bonuskortti   ·   Tarjoukset   ·   Bonusmaailma",
+            "emphasizedKeywords": [],
             "siteLinks": [
                 {
                     "title": "Hotellit",
@@ -83,6 +88,7 @@
             "url": "https://vierumaki.fi/majoitukset/vierumaeki-resort-hotel-standard-huoneet",
             "displayedUrl": "https://vierumaki.fi › majoitukset › vierumaeki-resort-hotel-standard-huoneet",
             "description": "Vierumäki Resort Hotel tarjoaa laadukasta majoitusta jokaiseen makuun. Hotellissa voit nauttia makuelämyksistä ...",
+            "emphasizedKeywords": [],
             "siteLinks": []
         },
         {
@@ -90,6 +96,7 @@
             "url": "https://vierumaki.fi/resorthotel",
             "displayedUrl": "https://vierumaki.fi › resorthotel",
             "description": "Vierumäki Resort Hotel tarjoaa laadukasta majoitusta jokaiseen makuun. Hotellissa voit nauttia makuelämyksistä ...",
+            "emphasizedKeywords": [],
             "siteLinks": []
         },
         {
@@ -97,6 +104,7 @@
             "url": "https://hotelivalo.fi/",
             "displayedUrl": "https://hotelivalo.fi",
             "description": "Tervetuloa hotelli Ivaloon! Hotelli Ivalo on laatua arvostavien lapinkävijöiden kohtauspaikka, jossa kansainvälinenkin ...",
+            "emphasizedKeywords": [],
             "siteLinks": []
         },
         {
@@ -104,6 +112,7 @@
             "url": "https://www.scandichotels.fi/hotellit/suomi/helsinki/marski-by-scandic",
             "displayedUrl": "https://www.scandichotels.fi › hotellit › suomi › helsinki › marski-by-scandic",
             "description": "Suomen ensimmäinen Signature-hotelli Marski by Scandic sykkii urbaania elämää suomalaisella twistillä Helsingin ...",
+            "emphasizedKeywords": [],
             "siteLinks": []
         }
     ],
