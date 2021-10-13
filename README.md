@@ -44,7 +44,11 @@ New Apify users have a free trial of Apify Proxy and Google SERPs, so you can us
 
 Once the Apify Proxy trial expires, you'll need to subscribe to a [paid plan](https://apify.com/pricing) in order to keep using the actor. If you need to increase your Google SERPs limit on Apify Proxy or have any questions, please email [support@apify.com](mailto:support@apify.com)
 
+In terms of platform usage credits, it is our experience that you will get **1,000 results for about $0.25**.
+
 ## Number of results
+The scraper will consume one SERP proxy per request, so you will make the best use of your proxies by getting the maximum 100 results per request.
+
 You can change the number of results per page by using the `resultsPerPage` parameter. The default is 10, but the allowed values are 10-100. You can also set `maxPagesPerQuery` to get more results for each query.
 
 Please note that, although Google always shows that it internally found millions of results, **Google will never display more than a few hundred results for a single search query**. If you need to get as many results as possible, try to create many similar queries and combine different parameters and locations.
