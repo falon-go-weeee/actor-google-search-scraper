@@ -1,4 +1,4 @@
-FROM apify/actor-node
+FROM apify/actor-node:16
 
 # Copy source code
 COPY . ./
