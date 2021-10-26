@@ -1,63 +1,59 @@
-# Google Search Results Scraper
-
-- [Features](#Features)
-- [SERP API](#SERP-API)
-- [Cost of usage](#Cost-of-usage)
-- [Use cases](#Use-cases)
-- [Number of results](#Number-of-results)
-- [Input settings](#Input-settings)
-- [Results](#Results)
-- [Tips and tricks](#Tips-and-tricks)
-- [Changelog](#Changelog)
-
 ## Features
+Our free SERP API crawls Google Search Results Pages (SERP or SERPs) and extracts data from the HTML in a structured format such as JSON, XML, CSV, or Excel. 
 
-This SERP API actor crawls Google Search Result Pages (SERP or SERPs) and extracts data from the HTML to a structured format such as JSON, XML or Excel. Specifically, the actor extracts the following data from each SERP:
+The following data can be extracted from each SERP:
 
 - Organic results
 - Ads
 - Product ads
 - Related queries
-- People also ask
-- Price, reviews rating and count (under `productInfo` field if available)
+- People Also Ask
+- Prices
+- Review rating and review count
 - Additional custom attributes
 
-Note that the actor doesn't support special types of Google searches, such as [Google Shopping](https://www.google.com/shopping),
-[Google Images](https://www.google.com/imghp) or [Google News](https://news.google.com).
+Note that this SERP scraper doesn't support special types of Google searches, such as [Google Shopping](https://www.google.com/shopping),
+[Google Images](https://www.google.com/imghp), or [Google News](https://news.google.com).
 
 ## SERP API
+Our Google Search Results Pages Scraper gives you a RESTful SERP API that provides real-time results optimized for structured JSON output that you can download and use any way you want.
 
-Our Google Search Results Scraper gives you a RESTful SERP API that provides real-time results optimized for structured JSON output that you can download and use any way you want.
+## Why use a SERP API?
+Google Search processes over [3.5 billion searches](https://www.internetlivestats.com/google-search-statistics/) per day and accounts for an incredible [92.6 percent](https://www.oberlo.com/statistics/search-engine-market-share) of all search queries across all search engine providers. 
 
-## Cost of usage
+Those numbers mean that it's really important for businesses to know how they and their competitors rank on Google. Unfortunately, Google Search does not provide an official SERP API, so the only way to efficiently monitor search results and ranking is to use web scraping.
 
-The actor is free to use, but to scrape SERPs effectively, you should use [Apify Proxy](https://apify.com/proxy) and need to have a sufficient limit for Google SERP queries (you can see the limit on your [Account](https://my.apify.com/account) page).
-
-New Apify users have a free trial of Apify Proxy and Google SERPs, so you can use the actor for free at the beginning.
-
-Once the Apify Proxy trial is expired, you'll need to subscribe to a [paid plan](https://apify.com/pricing) in order to keep using the actor. If you need to increase your Google SERP limit or have any questions, please email [support@apify.com](mailto:support@apify.com)
-
-## Use cases
-
-Google Search is the front door to the internet for most people around the world, so it's really important for businesses to know how they rank on Google. Unfortunately, Google Search does not provide a public API, so the only way to monitor search results and ranking is to use web scraping.
+Our free googlescraper tool gives you your own, customizable SERP scraper. You can do whatever you want with the SERP data once you extract and download it.
 
 Typical use cases include:
 
-- [Search engine optimization (SEO)](https://en.wikipedia.org/wiki/Search_engine_optimization)
-— Monitor how your website performs on Google for certain queries over time.
+- Use it for search engine optimization (SEO) and monitor how your website performs on Google for certain queries over time.
 - Analyze display ads for a given set of keywords.
 - Monitor your competition in both organic and paid results.
-- Build a URL list for certain keywords. This is useful if you, for example, need good relevant starting points when scraping web pages containing specific phrases.
+- Build a URL list for certain keywords. This is useful if, for example, you need good relevant starting points when scraping web pages containing specific phrases.
 
-Read more in the [How to scrape Google Search](https://blog.apify.com/unofficial-google-search-api-from-apify-22a20537a951) blog post.
+For more inspiration, check out our [industries pages](https://apify.com/industries), where you can find suggestions on how to use web scraping in a range of different sectors.
+
+## Tutorial
+If you would like a step-by-step tutorial on how to use the Google Results Search Scraper, read our blog post on [how to scrape Google Search](https://blog.apify.com/unofficial-google-search-api-from-apify-22a20537a951). It's also packed with ideas on what you can do with data you scrape from Google Search and gives you clear instructions on how to run the scraper, with screenshots and examples.
+
+## Cost of usage
+Our SERP Scraper is free to use, but to scrape SERPs effectively, you should use [Apify Proxy](https://apify.com/proxy) and you need to set a sufficient limit for Google SERP queries (you can see the limit on your [Account](https://my.apify.com/account) page).
+
+New Apify users have a free trial of Apify Proxy and Google SERPs, so you can use the actor for free at the beginning.
+
+Once the Apify Proxy trial expires, you'll need to subscribe to a [paid plan](https://apify.com/pricing) in order to keep using the actor. If you need to increase your Google SERPs limit on Apify Proxy or have any questions, please email [support@apify.com](mailto:support@apify.com)
+
+In terms of platform usage credits, it is our experience that you will get **1,000 results for about $0.25**.
 
 ## Number of results
-You can change the number of results per page by using the `resultsPerPage` parameter. The default is 10 but allowed values are 10-100. You can also set `maxPagesPerQuery` to get more results for each query.
+The scraper will consume one SERP proxy per request, so you will make the best use of your proxies by getting the maximum 100 results per request.
 
-Please keep in mind that, although Google shows that it internally found millions of results, **Google will never display more than a few hundred results per single search query**. You can try it in your own browser. If you need to get as many results as possible, try to create many similar queries and combine different parameters and locations.
+You can change the number of results per page by using the `resultsPerPage` parameter. The default is 10, but the allowed values are 10-100. You can also set `maxPagesPerQuery` to get more results for each query.
+
+Please note that, although Google always shows that it internally found millions of results, **Google will never display more than a few hundred results for a single search query**. If you need to get as many results as possible, try to create many similar queries and combine different parameters and locations.
 
 ## Input settings
-
 The actor gives you fine-grained control over what kind of Google Search results you'll get.
 
 You can specify the following settings:
@@ -69,12 +65,11 @@ You can specify the following settings:
 - Number of results per page
 - Mobile or desktop version
 
-For a complete description of all settings of the actor, see the [input specification](https://www.apify.com/apify/google-search-scraper?section=input-schema).
+For a complete description of all settings, see  [input specification](https://www.apify.com/apify/google-search-scraper?section=input-schema).
 
 ## Results
-
 The actor stores its result in the default [dataset](https://apify.com/docs/storage#dataset) associated with the actor run, from which you can export it
-to various formats, such as JSON, XML, CSV or Excel.
+to various formats, such as JSON, XML, CSV, or Excel.
 
 The results can be downloaded from the [Get dataset items](https://www.apify.com/docs/api/v2#/reference/datasets/item-collection/get-items) API endpoint:
 
@@ -85,7 +80,7 @@ https://api.apify.com/v2/datasets/[DATASET_ID]/items?format=[FORMAT]
 where `[DATASET_ID]` is the ID of the dataset and `[FORMAT]`
 can be `csv`, `html`, `xlsx`, `xml`, `rss` or `json`.
 
-For each Google Search results page, the dataset will contain a single record, which in JSON format looks as follows. Keep in mind that some fields have example values:
+For each Google Search results page, the dataset will contain a single record, which in JSON format looks as follows. Bear in mind that some fields have example values:
 
 ```json
 {
@@ -181,7 +176,7 @@ For each Google Search results page, the dataset will contain a single record, w
 
 ### How to get one search result per row
 
-If you are only interested in organic Google Search results and want to get just one organic or paid result per row on the output, simply query the `fields=searchQuery,organicResults` and `unwind=organicResults` query parameters to the API endpoint URL:
+If you're only interested in organic Google Search results and want to get just one organic or paid result per row on output, just query the `fields=searchQuery,organicResults` and `unwind=organicResults` query parameters to the API endpoint URL:
 
 ```
 https://api.apify.com/v2/datasets/[DATASET_ID]/items?format=[FORMAT]&fields=searchQuery,organicResults&unwind=organicResults
@@ -219,12 +214,14 @@ The API will return a result like this (in JSON format):
 ]
 ```
 
-When using tabular format such as `csv` or `xls`, you'll get a table where each row contains just one organic result. For more details about exporting and formatting the dataset records, please see the documentation of the [Get dataset items](https://apify.com/docs/api/v2#/reference/datasets/item-collection/get-items) API endpoint.
+When using a tabular format such as `csv` or `xls`, you'll get a table where each row contains just one organic result. For more details about exporting and formatting the dataset records, please see the documentation for the [Get dataset items](https://apify.com/docs/api/v2#/reference/datasets/item-collection/get-items) API endpoint.
 
 ## Tips and tricks
+* Crawling the second and subsequent results pages might be slower than the first page.
+* If you need to scrape a lot of results for a single query, you can greatly improve the speed of the crawl by setting **Results per page** (`resultsPerPage`) to 100, so that you get 100 results per page instead of crawling 10 pages, each with 10 results.
 
-* Crawling the second and further result pages might be slower than the first page.
-* If you need to scrape a lot of results for a single query, then you can greatly improve the speed of the crawl by setting **Results per page** (`resultsPerPage`) to 100, instead of crawling 10 pages each with 10 results.
+## Personal data
+You should be aware that search results can contain personal data. Personal data is protected by GDPR in the European Union and by other regulations around the world. You should not scrape personal data unless you have a legitimate reason to do so. If you're unsure whether your reason is legitimate, consult your lawyers. You can also read our blog post on the [legality of web scraping](https://blog.apify.com/is-web-scraping-legal/).
 
 ## Changelog
-Google Search Results Scraper is under active development and we regularly introduce new features and fix bugs. We also often have to hotfix the extractor when Google changes the page layout. Check our [Changelog](https://github.com/apify/actor-google-search-scraper/blob/master/CHANGELOG.md) for recent updates.
+Google Search Results Scraper is under active development and we regularly introduce new features and fix bugs. We also often have to hotfix the scraper when Google changes its Search Engine Results Page layout. Check the [Changelog](https://github.com/apify/actor-google-search-scraper/blob/master/CHANGELOG.md) for recent updates.
