@@ -267,11 +267,11 @@ exports.extractPaidResults = ($) => {
                 })
 
                 ads.push({
-                    title: $el.find('[role="heading"]').text().trim(),
+                    title: $el.find('div[role="heading"]').text().trim(),
                     url: $el.find('a').attr('href'),
-                    displayedUrl: $el.find('a .Zu0yb.UGIkD.qzEoUe').text().trim(),
-                    description: $el.find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').text().trim(),
-                    emphasizedKeywords: $el.find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').find('em, b')
+                    displayedUrl: $el.find('a span.Zu0yb.UGIkD.qzEoUe').text().trim(),
+                    description: $el.find('div.w1C3Le div.MUxGbd.yDYNvb.lEBKkf').text().trim(),
+                    emphasizedKeywords: $el.find('div.w1C3Le div.MUxGbd.yDYNvb.lEBKkf').find('em, b')
                         .map((i, el) => $(el).text().trim()).toArray(),
                     siteLinks,
                 });
