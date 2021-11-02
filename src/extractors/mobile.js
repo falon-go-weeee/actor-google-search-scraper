@@ -209,8 +209,10 @@ exports.extractPaidResults = ($) => {
 
     if (layout === 'desktop-like') {
         $('.ads-fr').each((index, el) => {
+            const $el = $(el);
             const siteLinks = [];
-            $(el).find('a')
+
+            $el.find('a')
                 .not('[data-rw]')
                 .not('[ping]')
                 .not('[data-is-ad]')
@@ -225,7 +227,7 @@ exports.extractPaidResults = ($) => {
                     }
                 });
 
-            const $heading = $(el).find('div[role=heading]');
+            const $heading = $el.find('div[role=heading]');
             const $url = $heading.parent('a');
 
             ads.push({
@@ -243,9 +245,11 @@ exports.extractPaidResults = ($) => {
         // Different desktop-like layout
         if (ads.length === 0) {
             $('#tads .uEierd').each((i, el) => {
+                const $el = $(el);
                 const siteLinks = [];
+
                 // This is for vertical sie links
-                $(el).find('.BmP5tf .MUxGbd a[data-hveid]').each((i, el) => {
+                $el.find('.BmP5tf .MUxGbd a[data-hveid]').each((i, el) => {
                     siteLinks.push({
                         title: $(el).text().trim(),
                         url: $(el).attr('href'),
@@ -254,7 +258,7 @@ exports.extractPaidResults = ($) => {
                 })
 
                 // This is for horizontal site links
-                $(el).find('g-scrolling-carousel a').each((i, el) => {
+                $el.find('g-scrolling-carousel a').each((i, el) => {
                     siteLinks.push({
                         title: $(el).text().trim(),
                         url: $(el).attr('href'),
@@ -263,11 +267,11 @@ exports.extractPaidResults = ($) => {
                 })
 
                 ads.push({
-                    title: $(el).find('[role="heading"]').text().trim(),
-                    url: $(el).find('a').attr('href'),
-                    displayedUrl: $(el).find('a .Zu0yb.UGIkD.qzEoUe').text().trim(),
-                    description: $(el).find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').text().trim(),
-                    emphasizedKeywords: $(el).find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').find('em, b')
+                    title: $el.find('[role="heading"]').text().trim(),
+                    url: $el.find('a').attr('href'),
+                    displayedUrl: $el.find('a .Zu0yb.UGIkD.qzEoUe').text().trim(),
+                    description: $el.find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').text().trim(),
+                    emphasizedKeywords: $el.find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').find('em, b')
                         .map((i, el) => $(el).text().trim()).toArray(),
                     siteLinks,
                 });
