@@ -15,6 +15,7 @@ describe('mobile extractors', () => {
         'weblight',
         'weblight2',
         'desktop-like',
+        'desktop-like2',
     ]) {
         describe(`${type}`, () => {
             test('determineLayout', async () => {

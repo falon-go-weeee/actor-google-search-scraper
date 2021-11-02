@@ -244,7 +244,7 @@ exports.extractPaidResults = ($) => {
 
         // Different desktop-like layout
         if (ads.length === 0) {
-            $('#tads .uEierd').each((i, el) => {
+            $('div[id^=tads] div.uEierd').each((i, el) => {
                 const $el = $(el);
                 const siteLinks = [];
 

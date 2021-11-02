@@ -1,0 +1,296 @@
+{
+  "#debug": {
+    "requestId": "FGPKEEeJPpYuvSF",
+    "url": "http://www.google.com/search?hl=en&q=buy%20ray%20ban&xmobile=1",
+    "method": "GET",
+    "retryCount": 0,
+    "errorMessages": [],
+    "statusCode": 200,
+    "durationSecs": 9.581
+  },
+  "#error": false,
+  "searchQuery": {
+    "term": "buy ray ban",
+    "device": "MOBILE",
+    "page": 1,
+    "type": "SEARCH",
+    "domain": "google.com",
+    "countryCode": "US",
+    "languageCode": "en",
+    "locationUule": null,
+    "resultsPerPage": 10
+  },
+  "url": "http://www.google.com/search?hl=en&q=buy%20ray%20ban&xmobile=1",
+  "hasNextPage": true,
+  "resultsTotal": "N/A",
+  "relatedQueries": [],
+  "paidResults": [
+    {
+      "title": "Ray-Ban® Official Site - Up to 50% Off Select Styles",
+      "url": "https://www.ray-ban.com/canada/en/sunglasses/clearance",
+      "displayedUrl": "https://www.ray-ban.com/",
+      "description": "Don't Wait! Get Up to 50% Off Select Items. Shop Now, Sales End Soon. Order Today Your New Pair of Sunglasses and Enjoy Free Shipping! Models: Wayfarer, Meteor, Round.",
+      "emphasizedKeywords": [],
+      "siteLinks": [
+        {
+          "title": "Men's Sunglasses",
+          "url": "https://www.googleadservices.com/pagead/aclk?sa=L&ai=DChcSEwjIzYv4kfrzAhUjbW8EHSmPCuUYABAEGgJqZg&ae=1&ohost=www.google.com&cid=CAASEuRoH1ZxiyjemY_tlDjVLgfLGA&sig=AOD64_0kR-7Fh1N-WBrrGGPHk7bPhWlFTw&q=&ved=2ahUKEwiZwYL4kfrzAhWUvp4KHZVTCtAQwgUoAHoECAMQBQ&adurl=https://www.ray-ban.com/canada/en/sunglasses/men-s%3Fcid%3DPM-SGA_120421-CA-Sitelink-MenSunglasses%26gclsrc%3Daw.ds%26gclid%3DEAIaIQobChMIyM2L-JH68wIVI21vBB0pjwrlEAAYASABEgLQnvD_BwE",
+          "description": null
+        },
+        {
+          "title": "Women's Sunglasses",
+          "url": "https://www.googleadservices.com/pagead/aclk?sa=L&ai=DChcSEwjIzYv4kfrzAhUjbW8EHSmPCuUYABAFGgJqZg&ae=1&ohost=www.google.com&cid=CAASEuRoH1ZxiyjemY_tlDjVLgfLGA&sig=AOD64_1Lr6dTHaHU9H4tFozlaax5NI3WeA&q=&ved=2ahUKEwiZwYL4kfrzAhWUvp4KHZVTCtAQwgUoAXoECAMQBg&adurl=https://www.ray-ban.com/usa/sunglasses/women-s%3Fcid%3DPM-SGA_US-120421-Sitelink-WomenSunglasses%26gclsrc%3Daw.ds%26gclid%3DEAIaIQobChMIyM2L-JH68wIVI21vBB0pjwrlEAAYASACEgKHuvD_BwE",
+          "description": null
+        },
+        {
+          "title": "New Ray-Ban Stories",
+          "url": "https://www.googleadservices.com/pagead/aclk?sa=L&ai=DChcSEwjIzYv4kfrzAhUjbW8EHSmPCuUYABAGGgJqZg&ae=1&ohost=www.google.com&cid=CAASEuRoH1ZxiyjemY_tlDjVLgfLGA&sig=AOD64_0eNB0G9NiYVYvfJqFfIkh2GJO4IA&q=&ved=2ahUKEwiZwYL4kfrzAhWUvp4KHZVTCtAQwgUoAnoECAMQBw&adurl=https://www.ray-ban.com/canada/en/ray-ban-stories%3Fcid%3DPM-SGA_090921-CA_Sitelink_RayBanStories_Launch%26gclsrc%3Daw.ds%26gclid%3DEAIaIQobChMIyM2L-JH68wIVI21vBB0pjwrlEAAYASADEgIbIvD_BwE",
+          "description": null
+        }
+      ]
+    },
+    {
+      "title": "Ray-Ban Up to 50% Off - Sunglass Hut® Official Store",
+      "url": "https://www.sunglasshut.com/us/Sunglasses-Brands",
+      "displayedUrl": "https://www.sunglasshut.com/",
+      "description": "Enjoy Free Shipping & Free Returns on the Best Ray-Ban Sunglasses. Don't Miss the Offer: Up to 50% Off on a Wide Selection. Shop Now at Sunglass Hut.",
+      "emphasizedKeywords": [],
+      "siteLinks": []
+    },
+    {
+      "title": "Ray-Ban | Up to 50% Off + Free Shipping + Free Rx Lenses",
+      "url": "https://www.glassesusa.com/ray-ban",
+      "displayedUrl": "https://www.glassesusa.com/",
+      "description": "Risk & Hassle Free. Ray-Ban Glasses Custom Made For Your Prescription & Free Shipping. The New...",
+      "emphasizedKeywords": [],
+      "siteLinks": []
+    },
+    {
+      "title": "Ray-Ban Eyewear - 60% Off Lenses | Shop Now",
+      "url": "https://www.framesdirect.com/s/?department=Eyeglasses&brand=dragon,flexon,flexon%20magnetics,jalapenos,nautica,nike,nine%20west,oakley,oakley%20women,ray-ban,ray-ban%20junior,silhouette%20rimless,tura,flexon%20magnetics,",
+      "displayedUrl": "https://www.framesdirect.com/",
+      "description": "Explore the largest Ray-Ban selection. From timeless classics to stylish modern frames. Ray-Ban...",
+      "emphasizedKeywords": [],
+      "siteLinks": []
+    }
+  ],
+  "paidProducts": [],
+  "organicResults": [
+    {
+      "title": "Ray-Ban® Official Store USASunglasses - Free Shipping | Ray-Ban®Sunglasses for Men | Ray-Ban® USAStore Locator | Ray-Ban® USA",
+      "url": "https://www.ray-ban.com/",
+      "displayedUrl": "https://www.ray-ban.com",
+      "description": "Ray-Ban is a leader in sun and prescription eyewear for generations providing timeless style, authenticity and premium lenses ...Shop Ray-Ban sunglasses by model, frame material, color and lens at the Official Ray-Ban US online store. Free Overnight Shipping and Returns on all orders.Shop all official Ray-Ban® Men's Sunglasses at the Ray-Ban® online store. Choose from the coolest new and classic frames, ...Order online and pick up at your nearest store in just 2 hours. View our in-store services designed for a more personalized ...",
+      "emphasizedKeywords": [],
+      "siteLinks": [
+        {
+          "title": "Women's Sunglasses",
+          "url": "https://www.ray-ban.com/usa/sunglasses/women-s",
+          "description": null
+        },
+        {
+          "title": "Eyeglasses",
+          "url": "https://www.ray-ban.com/usa/eyeglasses/view-all",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban Stories",
+          "url": "https://www.ray-ban.com/usa/discover-ray-ban-stories/clp",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban Studios",
+          "url": "https://www.ray-ban.com/usa/ray-ban-studios/clp",
+          "description": null
+        }
+      ],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban® Official Store USA",
+      "url": "https://www.ray-ban.com/",
+      "displayedUrl": "https://www.ray-ban.com",
+      "description": "Ray-Ban is a leader in sun and prescription eyewear for generations providing timeless style, authenticity and premium lenses ...",
+      "emphasizedKeywords": [],
+      "siteLinks": [
+        {
+          "title": "Women's Sunglasses",
+          "url": "https://www.ray-ban.com/usa/sunglasses/women-s",
+          "description": null
+        },
+        {
+          "title": "Eyeglasses",
+          "url": "https://www.ray-ban.com/usa/eyeglasses/view-all",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban Stories",
+          "url": "https://www.ray-ban.com/usa/discover-ray-ban-stories/clp",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban Studios",
+          "url": "https://www.ray-ban.com/usa/ray-ban-studios/clp",
+          "description": null
+        }
+      ],
+      "productInfo": {}
+    },
+    {
+      "title": "Sunglasses - Free Shipping | Ray-Ban®",
+      "url": "https://www.ray-ban.com/usa/sunglasses/view-all",
+      "displayedUrl": "https://www.ray-ban.com › view-all",
+      "description": "Shop Ray-Ban sunglasses by model, frame material, color and lens at the Official Ray-Ban US online store. Free Overnight Shipping and Returns on all orders.",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    },
+    {
+      "title": "Sunglasses for Men | Ray-Ban® USA",
+      "url": "https://www.ray-ban.com/usa/sunglasses/men-s",
+      "displayedUrl": "https://www.ray-ban.com › men-s",
+      "description": "Shop all official Ray-Ban® Men's Sunglasses at the Ray-Ban® online store. Choose from the coolest new and classic frames, ...",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    },
+    {
+      "title": "Store Locator | Ray-Ban® USA",
+      "url": "https://www.ray-ban.com/usa/mobile/store-locator",
+      "displayedUrl": "https://www.ray-ban.com › mobile",
+      "description": "Order online and pick up at your nearest store in just 2 hours. View our in-store services designed for a more personalized ...",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban Sunglasses for Men & Women",
+      "url": "https://www.sunglasshut.com/us/ray-ban",
+      "displayedUrl": "https://www.sunglasshut.com › ray-...",
+      "description": "Browse the Sunglass Hut Online selection of Ray-Ban sunglasses, including styles like Wayfarer, Aviator and Clubmaster. Free ...",
+      "emphasizedKeywords": [],
+      "siteLinks": [
+        {
+          "title": "Ray-Ban Stories",
+          "url": "https://www.sunglasshut.com/us/sunglasses/discover-ray-ban-stories",
+          "description": null
+        },
+        {
+          "title": "Customize your Ray-Ban",
+          "url": "https://www.sunglasshut.com/us/ray-ban-custom-sunglasses",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban Sunglasses for Men",
+          "url": "https://www.sunglasshut.com/us/mens-sunglasses-ray-ban",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban x Disney",
+          "url": "https://www.sunglasshut.com/us/sunglasses/ray-ban-x-disney",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban RB2140 WAYFARER",
+          "url": "https://www.sunglasshut.com/us/ray-ban/rb2140-8056597467797",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban RB3025 Polarized...",
+          "url": "https://www.sunglasshut.com/us/ray-ban/rb3025-805289441557",
+          "description": null
+        },
+        {
+          "title": "Ray-Ban RB3025 Light Brown...",
+          "url": "https://www.sunglasshut.com/us/ray-ban/rb3025-805289305026",
+          "description": null
+        }
+      ],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban and Facebook introduce Ray-Ban Stories, first-generation smart ...",
+      "url": "https://tech.fb.com/ray-ban-and-facebook-introduce-ray-ban-stories-first-generation-smart-glasses/",
+      "displayedUrl": "https://tech.fb.com › ray-ban-and-fa...",
+      "description": "Sep 9, 2021 — Today we're excited to launch Ray-Ban Stories: Smart glasses that give you an authentic way to capture photos and video, ...",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban | Up to 50% Off + Free Shipping + Free Rx Lenses",
+      "url": "https://m.glassesusa.com/ray-ban",
+      "displayedUrl": "https://m.glassesusa.com › ray-ban",
+      "description": "Discover the best place to shop Ray-Ban sunglasses and eyeglasses! Save big on all iconic styles such as Aviator, Wayfarer and Clubmaster.",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban Glasses With Prescription & 2-Day Delivery Options",
+      "url": "https://www.eyebuydirect.com/brands/ray-ban",
+      "displayedUrl": "https://www.eyebuydirect.com › ray...",
+      "description": "Find world-famous Rayban glasses at EyeBuyDirect. You can order Ray-Ban's latest styles from the comfort of your own home, right here.",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban Sunglasses - Mens & Womens Ray-Bans - Macy's",
+      "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop?id=78258",
+      "displayedUrl": "https://www.macys.com › shop › ra...",
+      "description": "Oct 13, 2021 — Shop authentic Ray-Ban Sunglasses for men and women at macys.com! Discover a wide selection of Ray-Ban styles and shapes.",
+      "emphasizedKeywords": [],
+      "siteLinks": [
+        {
+          "title": "Women (584)",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Gender/Women?id=78258",
+          "description": null
+        },
+        {
+          "title": "Men Ray-Ban Shop",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Gender/Men?id=78258",
+          "description": null
+        },
+        {
+          "title": "Round Ray-Ban Shop",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Sunglasses_style/Round?id=78258",
+          "description": null
+        },
+        {
+          "title": "Chromance Ray-Ban Shop",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Lens_technology/Chromance?id=78258",
+          "description": null
+        },
+        {
+          "title": "Blue Ray-Ban Shop",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Color_normal/Blue?id=78258",
+          "description": null
+        },
+        {
+          "title": "Sales & Discounts (85)",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Special_offers/Sales%20%26%20Discounts?id=78258",
+          "description": null
+        },
+        {
+          "title": "Clearance/Closeout (73)",
+          "url": "https://www.macys.com/shop/handbags-accessories/ray-ban-shop/Special_offers/Clearance%2FCloseout?id=78258",
+          "description": null
+        }
+      ],
+      "productInfo": {}
+    },
+    {
+      "title": "Ray-Ban Sunglasses | Best Price Guarantee | SmartBuyGlasses USA",
+      "url": "https://www.smartbuyglasses.com/designer-sunglasses/Ray-Ban/",
+      "displayedUrl": "https://www.smartbuyglasses.com › ...",
+      "description": "Products 1 - 59 of 1560 — Shop Ray-Ban Sunglasses online at SmartBuyGlasses for the best prices. Enjoy a wide range and free shipping on all orders.",
+      "emphasizedKeywords": [],
+      "siteLinks": [],
+      "productInfo": {}
+    }
+  ],
+  "peopleAlsoAsk": [],
+  "customData": null,
+  "htmlSnapshotUrl": "https://api.apify.com/v2/key-value-stores/default/records/FGPKEEeJPpYuvSF.html"
+}
