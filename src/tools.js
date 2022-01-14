@@ -148,7 +148,18 @@ exports.ensureAccessToSerpProxy = async () => {
 
 exports.saveResults = async (dataset, results, csvFriendlyOutput) => {
     const datasetResults = csvFriendlyOutput ? buildCsvFriendlyResults(results) : results;
+
+    const { emphasizedKeywords } = datasetResults;
+    if (emphasizedKeywords) {
+        // keywords are often duplicated
+        datasetResults.emphasizedKeywords = getUniqueItems(emphasizedKeywords);
+    }
+
     await dataset.pushData(datasetResults);
+};
+
+const getUniqueItems = (items) => {
+    return Array.from(new Set(items));
 };
 
 const buildCsvFriendlyResults = (results) => {
