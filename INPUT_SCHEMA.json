@@ -746,8 +746,7 @@
         "title": "CSV friendly output",
         "type": "boolean",
         "description": "If checked, the crawler will return results in a structure suitable for CSV format.",
-        "default": false,
-        "prefill": true
+        "default": false
     },
       "customDataFunction": {
           "title": "Custom data function",
