@@ -31,18 +31,20 @@ exports.extractOrganicResults = ($) => {
                     description: $(siteLinkEl).parent('div').parent('h3').parent('div')
                         .find('> div')
                         .toArray()
-                        .map(d => $(d).text())
+                        .map((d) => $(d).text())
                         .join(' ') || null,
                 });
             });
         } else if ($(el).parent().parent().siblings(siteLinksSel2021January).length > 0) {
-            $(el).parent().parent().siblings(siteLinksSel2021January).find('td .sld').each((i, siteLinkEl) => {
-                siteLinks.push({
-                    title: $(siteLinkEl).find('a').text(),
-                    url: $(siteLinkEl).find('a').attr('href'),
-                    description: $(siteLinkEl).find('.s').text()
+            $(el).parent().parent().siblings(siteLinksSel2021January)
+                .find('td .sld')
+                .each((_i, siteLinkEl) => {
+                    siteLinks.push({
+                        title: $(siteLinkEl).find('a').text(),
+                        url: $(siteLinkEl).find('a').attr('href'),
+                        description: $(siteLinkEl).find('.s').text(),
+                    });
                 });
-            });
         }
 
         const productInfo = {};
@@ -70,21 +72,21 @@ exports.extractOrganicResults = ($) => {
             url: $(el).find('a').attr('href'),
             displayedUrl: $(el).find('cite').eq(0).text(),
             description: $(el).find('.IsZvec').text(),
-            emphasizedKeywords: $(el).find('.IsZvec em, .IsZvec b').map((i, el) => $(el).text().trim()).toArray(),
+            emphasizedKeywords: $(el).find('.IsZvec em, .IsZvec b').map((_i, e) => $(e).text().trim()).toArray(),
             siteLinks,
             productInfo,
         };
         return searchResult;
-    }
+    };
 
     // TODO: If you figure out how to reasonably generalize this, you get a medal
     const resultSelectorOld = '.g .rc';
     // We go one deeper to gain accuracy but then we have to go one up for the parsing
     const resultSelector2021January = '.g .tF2Cxc>.yuRUbf';
 
-    let searchResults = $(`${resultSelectorOld}`).map((index, el) => parseResult(el)).toArray();
+    let searchResults = $(`${resultSelectorOld}`).map((_i, el) => parseResult(el)).toArray();
     if (searchResults.length === 0) {
-        searchResults = $(`${resultSelector2021January}`).map((index, el) => parseResult($(el).parent())).toArray();
+        searchResults = $(`${resultSelector2021January}`).map((_i, el) => parseResult($(el).parent())).toArray();
     }
 
     return searchResults;
@@ -113,7 +115,7 @@ exports.extractPaidResults = ($) => {
                     description: $(siteLinkEl).parent('div').parent('h3').parent('div')
                         .find('> div')
                         .toArray()
-                        .map(d => $(d).text())
+                        .map((d) => $(d).text())
                         .join(' ') || null,
                 });
             });
@@ -133,7 +135,7 @@ exports.extractPaidResults = ($) => {
             // The .eq(2) fixes getting "Ad." instead of the displayed URL.
             displayedUrl: $url.find('> div > span').eq(2).text(),
             description: $description.text(),
-            emphasizedKeywords: $description.find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+            emphasizedKeywords: $description.find('em, b').map((_i, e) => $(e).text().trim()).toArray(),
             siteLinks,
         });
     });

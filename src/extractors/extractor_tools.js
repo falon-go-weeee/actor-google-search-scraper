@@ -1,22 +1,22 @@
-const cheerio = require("cheerio");
+const cheerio = require('cheerio');
 
 exports.extractPeopleAlsoAsk = ($) => {
     const peopleAlsoAsk = [];
 
     // HTML that we need is hidden in escaped script texts
-    const scriptMatches = $('html').html().match(/,\'\\x3cdiv class\\x3d[\s\S]+?\'\)\;\}\)/gi);
+    const scriptMatches = $('html').html().match(/,'\\x3cdiv class\\x3d[\s\S]+?'\);\}\)/gi);
 
     if (Array.isArray(scriptMatches)) {
         const htmls = scriptMatches.map((match) => {
             const escapedHtml = match.replace(',\'', '').replace('\');})', '');
-            const unescaped = escapedHtml.replace(/\\x(\w\w)/g, (match, group) => {
+            const unescaped = escapedHtml.replace(/\\x(\w\w)/g, (_match, group) => {
                 const charCode = parseInt(group, 16);
                 return String.fromCharCode(charCode);
             });
             return unescaped;
         });
 
-        htmls.forEach((html, i) => {
+        htmls.forEach((html) => {
             const $Internal = cheerio.load(html);
 
             // There are might be one extra post that is not really a question

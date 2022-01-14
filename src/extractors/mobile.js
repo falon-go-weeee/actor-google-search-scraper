@@ -94,13 +94,12 @@ exports.extractOrganicResults = ($, hostname) => {
                 productInfo.price = Number(productInfoPriceText.replace(/[^0-9.]/g, ''));
             }
 
-
             searchResults.push({
                 title: $el.find('a div[role="heading"]').text(),
                 url: $el.find('a').first().attr('href'),
                 displayedUrl: $el.find('span.qzEoUe').first().text(),
                 description: $el.find('div.yDYNvb').text(),
-                emphasizedKeywords: $el.find('div.yDYNvb').find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                emphasizedKeywords: $el.find('div.yDYNvb').find('em, b').map((_i, e) => $(e).text().trim()).toArray(),
                 siteLinks,
                 productInfo,
             });
@@ -144,7 +143,7 @@ exports.extractOrganicResults = ($, hostname) => {
                     url: getUrlFromParameter($el.find('a').first().attr('href'), hostname),
                     displayedUrl: $el.find('a > div').eq(0).text().trim(),
                     description: $description.text().replace(/ · /g, '').trim(),
-                    emphasizedKeywords: $description.find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                    emphasizedKeywords: $description.find('em, b').map((_i, e) => $(e).text().trim()).toArray(),
                     siteLinks,
                 });
             });
@@ -152,16 +151,16 @@ exports.extractOrganicResults = ($, hostname) => {
 
     if (layout === 'weblight') {
         $('body > div > div > div')
-            .filter((index, el) => {
+            .filter((_i, el) => {
                 return $(el).find('a[href*="googleweblight"],a[href^="/url"]').length > 0;
             })
-            .each((index, el) => {
+            .each((_i, el) => {
                 const $el = $(el);
                 const siteLinks = [];
 
                 $el
                     .find('a.M3vVJe')
-                    .each((i, siteLinkEl) => {
+                    .each((_index, siteLinkEl) => {
                         siteLinks.push({
                             title: $(siteLinkEl).text(),
                             url: getUrlFromParameter(
@@ -193,7 +192,10 @@ exports.extractOrganicResults = ($, hostname) => {
                         .text()
                         .trim(),
                     description: $el.find('table span').first().text().trim(),
-                    emphasizedKeywords: $el.find('table span').first().find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                    emphasizedKeywords: $el.find('table span')
+                        .first().find('em, b')
+                        .map((_index, e) => $(e).text().trim())
+                        .toArray(),
                     siteLinks,
                 });
             });
@@ -231,40 +233,44 @@ exports.extractPaidResults = ($) => {
             const $url = $heading.parent('a');
 
             ads.push({
-                title: $heading.find('span').length ? $heading.find('span').toArray().map(s => $(s).text()).join(' ') : $heading.text(),
+                title: $heading.find('span').length ? $heading.find('span').toArray().map((s) => $(s).text()).join(' ') : $heading.text(),
                 url: $url.attr('href'),
                 displayedUrl: $url.next('div').find('> span').eq(1).text()
-                    || $url.find('> div').eq(0).find('> div > span').eq(1).text(),
-                description: $url.parent().next('div').find('span').eq(0).text(),
-                emphasizedKeywords: $url.parent().next('div').find('span').eq(0).find('em, b')
-                    .map((i, el) => $(el).text().trim()).toArray(),
+                    || $url.find('> div').eq(0).find('> div > span').eq(1)
+                        .text(),
+                description: $url.parent().next('div').find('span').eq(0)
+                    .text(),
+                emphasizedKeywords: $url.parent().next('div').find('span').eq(0)
+                    .find('em, b')
+                    .map((_i, e) => $(e).text().trim())
+                    .toArray(),
                 siteLinks,
             });
         });
 
         // Different desktop-like layout
         if (ads.length === 0) {
-            $('div[id^=tads] div.uEierd').each((i, el) => {
+            $('div[id^=tads] div.uEierd').each((_i, el) => {
                 const $el = $(el);
                 const siteLinks = [];
 
                 // This is for vertical sie links
-                $el.find('.BmP5tf .MUxGbd a[data-hveid]').each((i, el) => {
+                $el.find('.BmP5tf .MUxGbd a[data-hveid]').each((_index, e) => {
                     siteLinks.push({
-                        title: $(el).text().trim(),
-                        url: $(el).attr('href'),
+                        title: $(e).text().trim(),
+                        url: $(e).attr('href'),
                         description: null,
-                    })
-                })
+                    });
+                });
 
                 // This is for horizontal site links
-                $el.find('g-scrolling-carousel a').each((i, el) => {
+                $el.find('g-scrolling-carousel a').each((_index, e) => {
                     siteLinks.push({
-                        title: $(el).text().trim(),
-                        url: $(el).attr('href'),
+                        title: $(e).text().trim(),
+                        url: $(e).attr('href'),
                         description: null,
-                    })
-                })
+                    });
+                });
 
                 ads.push({
                     title: $el.find('div[role="heading"]').text().trim(),
@@ -272,10 +278,10 @@ exports.extractPaidResults = ($) => {
                     displayedUrl: $el.find('a span.Zu0yb.UGIkD.qzEoUe').text().trim(),
                     description: $el.find('div.w1C3Le div.MUxGbd.yDYNvb.lEBKkf').text().trim(),
                     emphasizedKeywords: $el.find('div.w1C3Le div.MUxGbd.yDYNvb.lEBKkf').find('em, b')
-                        .map((i, el) => $(el).text().trim()).toArray(),
+                        .map((_index, e) => $(e).text().trim()).toArray(),
                     siteLinks,
                 });
-            })
+            });
         }
     }
 
@@ -300,8 +306,8 @@ exports.extractPaidResults = ($) => {
                     url: $el.find('a[href*="aclk"]').attr('href'),
                     displayedUrl: $heading.next('div').find('> span > span').text(),
                     description: $el.find('> div > div > div > span').text(),
-                    emphasizedKeywords:  $el.find('> div > div > div > span').find('em, b')
-                        .map((i, el) => $(el).text().trim()).toArray(),
+                    emphasizedKeywords: $el.find('> div > div > div > span').find('em, b')
+                        .map((_i, e) => $(e).text().trim()).toArray(),
                     siteLinks,
                 });
             });
