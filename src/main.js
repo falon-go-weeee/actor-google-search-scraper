@@ -7,7 +7,7 @@ const extractorsDesktop = require('./extractors/desktop');
 const extractorsMobile = require('./extractors/mobile');
 const {
     getInitialRequests, executeCustomDataFunction, getInfoStringFromResults, createSerpRequest,
-    logAsciiArt, createDebugInfo, ensureAccessToSerpProxy,
+    logAsciiArt, createDebugInfo, ensureAccessToSerpProxy, saveResults,
 } = require('./tools');
 
 const { log } = Apify.utils;
@@ -22,6 +22,7 @@ Apify.main(async () => {
         mobileResults,
         saveHtml,
         saveHtmlToKeyValueStore,
+        csvFriendlyOutput,
     } = input;
 
     // Check that user have access to SERP proxy.
@@ -131,7 +132,7 @@ Apify.main(async () => {
                 log.info(`This is the last page for query "${parsedUrl.query.q}". Next page button has not been found.`);
             }
 
-            await dataset.pushData(data);
+            await saveResults(dataset, data, csvFriendlyOutput);
 
             // Log some nice info for user.
             log.info(`Finished query "${parsedUrl.query.q}" page ${nonzeroPage} (${getInfoStringFromResults(data)})`);

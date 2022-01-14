@@ -742,6 +742,13 @@
           "description": "If checked, the lower quality results that Google normally filters out will be included. Usually it is few hundred extra results.",
           "default": false
       },
+      "csvFriendlyOutput": {
+        "title": "CSV friendly output",
+        "type": "boolean",
+        "description": "If checked, the crawler will return results in a structure suitable for CSV format.",
+        "default": false,
+        "prefill": true
+    },
       "customDataFunction": {
           "title": "Custom data function",
           "type": "string",

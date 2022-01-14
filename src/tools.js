@@ -8,7 +8,10 @@ const {
     COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN,
     GOOGLE_SEARCH_URL_REGEX,
     GOOGLE_DEFAULT_RESULTS_PER_PAGE,
+    RESULT_TYPE,
 } = require('./consts');
+
+const { utils: { log } } = Apify;
 
 exports.createSerpRequest = (url, page) => {
     if (url.startsWith('https://')) url = url.replace('https://', 'http://');
@@ -84,7 +87,7 @@ exports.getInfoStringFromResults = (results) => {
 };
 
 exports.logAsciiArt = () => {
-    console.log(`
+    log.info(`
  _______  _______  _______  _______  _______ _________ _        _______
 (  ____ \\(  ____ \\(  ____ )(  ___  )(  ____ )\\__   __/( (    /|(  ____ \\
 | (    \\/| (    \\/| (    )|| (   ) || (    )|   ) (   |  \\  ( || (    \\/
@@ -141,4 +144,28 @@ exports.ensureAccessToSerpProxy = async () => {
             + ' Please contact support@apify.com to increase the limit.');
         process.exit(1);
     }
+};
+
+exports.saveResults = async (dataset, results, csvFriendlyOutput) => {
+    const datasetResults = csvFriendlyOutput ? buildCsvFriendlyResults(results) : results;
+    await dataset.pushData(datasetResults);
+};
+
+const buildCsvFriendlyResults = (results) => {
+    const { organicResults, paidResults } = results;
+
+    const transformedResults = [
+        ...getTypedResults(organicResults, RESULT_TYPE.ORGANIC),
+        ...getTypedResults(paidResults, RESULT_TYPE.PAID),
+    ];
+
+    return transformedResults;
+};
+
+const getTypedResults = (results, type) => {
+    const typedResults = results.map((result) => {
+        return { type, ...result };
+    });
+
+    return typedResults;
 };
