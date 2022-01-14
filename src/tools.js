@@ -149,13 +149,19 @@ exports.ensureAccessToSerpProxy = async () => {
 exports.saveResults = async (dataset, results, csvFriendlyOutput) => {
     const datasetResults = csvFriendlyOutput ? buildCsvFriendlyResults(results) : results;
 
-    const { emphasizedKeywords } = datasetResults;
-    if (emphasizedKeywords) {
-        // keywords are often duplicated
-        datasetResults.emphasizedKeywords = getUniqueItems(emphasizedKeywords);
-    }
+    deduplicateItems(datasetResults);
 
     await dataset.pushData(datasetResults);
+};
+
+const deduplicateItems = (datasetResults) => {
+    datasetResults.forEach((result) => {
+        const { emphasizedKeywords } = result;
+        if (emphasizedKeywords) {
+            // keywords are often duplicated
+            result.emphasizedKeywords = getUniqueItems(emphasizedKeywords);
+        }
+    });
 };
 
 const getUniqueItems = (items) => {
