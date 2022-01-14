@@ -12,6 +12,7 @@ const {
 
 exports.createSerpRequest = (url, page) => {
     if (url.startsWith('https://')) url = url.replace('https://', 'http://');
+    if (!url.includes('http://www.')) url = url.replace('http://', 'http://www.');
 
     return {
         url,
@@ -32,8 +33,8 @@ exports.getInitialRequests = ({
 }) => {
     return queries
         .split('\n')
-        .map(item => item.trim())
-        .filter(item => !!item)
+        .map((item) => item.trim())
+        .filter((item) => !!item)
         .map((queryOrUrl) => {
             // If it's search URL ...
             if (GOOGLE_SEARCH_URL_REGEX.test(queryOrUrl)) return exports.createSerpRequest(queryOrUrl, 0);
@@ -121,7 +122,7 @@ exports.createDebugInfo = (request, response) => {
 exports.ensureAccessToSerpProxy = async () => {
     const userInfo = await Apify.newClient().user().get();
     // Has access to group and nonzero limit.
-    const hasGroupAllowed = userInfo.proxy.groups.filter(group => group.name === REQUIRED_PROXY_GROUP).length > 0;
+    const hasGroupAllowed = userInfo.proxy.groups.filter((group) => group.name === REQUIRED_PROXY_GROUP).length > 0;
     const maxSerps = userInfo.limits
         ? userInfo.limits.monthlyGoogleSerpRequests
         : userInfo.plan.maxMonthlyProxySerps;
