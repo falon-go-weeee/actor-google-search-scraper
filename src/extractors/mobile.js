@@ -94,7 +94,6 @@ exports.extractOrganicResults = ($, hostname) => {
                 productInfo.price = Number(productInfoPriceText.replace(/[^0-9.]/g, ''));
             }
 
-
             searchResults.push({
                 title: $el.find('a div[role="heading"]').text(),
                 url: $el.find('a').first().attr('href'),
@@ -193,7 +192,8 @@ exports.extractOrganicResults = ($, hostname) => {
                         .text()
                         .trim(),
                     ...extractDescriptionAndDate($el.find('table span').first().text().trim()),
-                    emphasizedKeywords: $el.find('table span').first().find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                    emphasizedKeywords: $el.find('table span').first().find('em, b').map((i, el) => $(el).text().trim())
+                        .toArray(),
                     siteLinks,
                 });
             });
@@ -231,13 +231,17 @@ exports.extractPaidResults = ($) => {
             const $url = $heading.parent('a');
 
             ads.push({
-                title: $heading.find('span').length ? $heading.find('span').toArray().map(s => $(s).text()).join(' ') : $heading.text(),
+                title: $heading.find('span').length ? $heading.find('span').toArray().map((s) => $(s).text()).join(' ') : $heading.text(),
                 url: $url.attr('href'),
                 displayedUrl: $url.next('div').find('> span').eq(1).text()
-                    || $url.find('> div').eq(0).find('> div > span').eq(1).text(),
-                ...extractDescriptionAndDate($url.parent().next('div').find('span').eq(0).text()),
-                emphasizedKeywords: $url.parent().next('div').find('span').eq(0).find('em, b')
-                    .map((i, el) => $(el).text().trim()).toArray(),
+                    || $url.find('> div').eq(0).find('> div > span').eq(1)
+                        .text(),
+                ...extractDescriptionAndDate($url.parent().next('div').find('span').eq(0)
+                    .text()),
+                emphasizedKeywords: $url.parent().next('div').find('span').eq(0)
+                    .find('em, b')
+                    .map((i, el) => $(el).text().trim())
+                    .toArray(),
                 siteLinks,
             });
         });
@@ -254,8 +258,8 @@ exports.extractPaidResults = ($) => {
                         title: $(el).text().trim(),
                         url: $(el).attr('href'),
                         description: null,
-                    })
-                })
+                    });
+                });
 
                 // This is for horizontal site links
                 $el.find('g-scrolling-carousel a').each((i, el) => {
@@ -263,8 +267,8 @@ exports.extractPaidResults = ($) => {
                         title: $(el).text().trim(),
                         url: $(el).attr('href'),
                         description: null,
-                    })
-                })
+                    });
+                });
 
                 ads.push({
                     title: $el.find('div[role="heading"]').text().trim(),
@@ -275,7 +279,7 @@ exports.extractPaidResults = ($) => {
                         .map((i, el) => $(el).text().trim()).toArray(),
                     siteLinks,
                 });
-            })
+            });
         }
     }
 

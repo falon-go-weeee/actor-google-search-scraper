@@ -1,4 +1,3 @@
-
 const { ensureItsAbsoluteUrl } = require('./ensure_absolute_url');
 const { extractPeopleAlsoAsk, extractDescriptionAndDate } = require('./extractor_tools');
 
@@ -16,13 +15,15 @@ exports.extractOrganicResults = ($) => {
         const siteLinksSel2021January = 'table';
 
         if ($(el).parent().parent().siblings(siteLinksSel2021January).length > 0) {
-            $(el).parent().parent().siblings(siteLinksSel2021January).find('td .sld').each((i, siteLinkEl) => {
-                siteLinks.push({
-                    title: $(siteLinkEl).find('a').text(),
-                    url: $(siteLinkEl).find('a').attr('href'),
-                    ...extractDescriptionAndDate($(siteLinkEl).find('.s').text()),
+            $(el).parent().parent().siblings(siteLinksSel2021January)
+                .find('td .sld')
+                .each((i, siteLinkEl) => {
+                    siteLinks.push({
+                        title: $(siteLinkEl).find('a').text(),
+                        url: $(siteLinkEl).find('a').attr('href'),
+                        ...extractDescriptionAndDate($(siteLinkEl).find('.s').text()),
+                    });
                 });
-            });
         } else if ($(el).find(siteLinksSel2020).length > 0) {
             $(el).find(siteLinksSel2020).each((i, siteLinkEl) => {
                 siteLinks.push({
@@ -32,7 +33,7 @@ exports.extractOrganicResults = ($) => {
                     ...extractDescriptionAndDate($(siteLinkEl).parent('div').parent('h3').parent('div')
                         .find('> div')
                         .toArray()
-                        .map(d => $(d).text())
+                        .map((d) => $(d).text())
                         .join(' ') || null),
                 });
             });
@@ -77,7 +78,7 @@ exports.extractOrganicResults = ($) => {
         };
 
         return searchResult;
-    }
+    };
 
     // TODO: If you figure out how to reasonably generalize this, you get a medal
     const resultSelectorOld = '.g .rc';
@@ -85,12 +86,12 @@ exports.extractOrganicResults = ($) => {
     const resultSelector2021January = '.g .tF2Cxc>.yuRUbf';
     const resultSelector2022January = '.g [data-header-feature="0"]';
 
-    let searchResults = []
+    let searchResults = [];
     if ($(`${resultSelector2022January}`).length > 0) {
         searchResults = [...$(`${resultSelector2022January}`)].reduce((organicResultsSels, organicResultSel) => {
             // We  fetch the list of sub organic results contained in one organic result section
             // It may be hijacking the siteLinks and flattening them into the organicResultsSels
-            const subOrganicResultsSels = $(organicResultSel).map((i, organicItem) => parseResult($(organicItem).parent())).toArray()
+            const subOrganicResultsSels = $(organicResultSel).map((i, organicItem) => parseResult($(organicItem).parent())).toArray();
             organicResultsSels.push(...subOrganicResultsSels);
             return organicResultsSels;
         }, []);
@@ -130,7 +131,7 @@ exports.extractPaidResults = ($) => {
                     ...extractDescriptionAndDate($(siteLinkEl).parent('div').parent('h3').parent('div')
                         .find('> div')
                         .toArray()
-                        .map(d => $(d).text())
+                        .map((d) => $(d).text())
                         .join(' ') || null),
                 });
             });
