@@ -81,9 +81,9 @@ exports.extractOrganicResults = ($) => {
     const resultSelectorOld = '.g .rc';
     // We go one deeper to gain accuracy but then we have to go one up for the parsing
     const resultSelector2021January = '.g .tF2Cxc>.yuRUbf';
-    const resultSelector2021JanuaryToo = '.g [data-header-feature]';
+    const resultSelector2022January = '.g [data-header-feature]';
 
-    let searchResults = $(`${resultSelector2021JanuaryToo}`).map((index, el) => parseResult($(el).parent())).toArray();
+    let searchResults = $(`${resultSelector2022January}`).map((index, el) => parseResult($(el).parent())).toArray();
     if (searchResults.length === 0) {
         searchResults = $(`${resultSelector2021January}`).map((index, el) => parseResult($(el).parent())).toArray();
     }
