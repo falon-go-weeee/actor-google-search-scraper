@@ -14,12 +14,12 @@ exports.extractOrganicResults = ($) => {
         const siteLinksSel2020 = '.St3GK a';
         const siteLinksSel2021January = 'table';
 
-        if ($(el).find(siteLinksSelOld).length > 0) {
-            $(el).find(siteLinksSelOld).each((i, siteLinkEl) => {
+        if ($(el).parent().parent().siblings(siteLinksSel2021January).length > 0) {
+            $(el).parent().parent().siblings(siteLinksSel2021January).find('td .sld').each((i, siteLinkEl) => {
                 siteLinks.push({
-                    title: $(siteLinkEl).find('h3').text(),
-                    url: $(siteLinkEl).find('h3 a').attr('href'),
-                    description: $(siteLinkEl).find('div').text(),
+                    title: $(siteLinkEl).find('a').text(),
+                    url: $(siteLinkEl).find('a').attr('href'),
+                    description: $(siteLinkEl).find('.s').text()
                 });
             });
         } else if ($(el).find(siteLinksSel2020).length > 0) {
@@ -35,12 +35,12 @@ exports.extractOrganicResults = ($) => {
                         .join(' ') || null,
                 });
             });
-        } else if ($(el).parent().parent().siblings(siteLinksSel2021January).length > 0) {
-            $(el).parent().parent().siblings(siteLinksSel2021January).find('td .sld').each((i, siteLinkEl) => {
+        } else if ($(el).find(siteLinksSelOld).length > 0) {
+            $(el).find(siteLinksSelOld).each((i, siteLinkEl) => {
                 siteLinks.push({
-                    title: $(siteLinkEl).find('a').text(),
-                    url: $(siteLinkEl).find('a').attr('href'),
-                    description: $(siteLinkEl).find('.s').text()
+                    title: $(siteLinkEl).find('h3').text(),
+                    url: $(siteLinkEl).find('h3 a').attr('href'),
+                    description: $(siteLinkEl).find('div').text(),
                 });
             });
         }
@@ -81,10 +81,14 @@ exports.extractOrganicResults = ($) => {
     const resultSelectorOld = '.g .rc';
     // We go one deeper to gain accuracy but then we have to go one up for the parsing
     const resultSelector2021January = '.g .tF2Cxc>.yuRUbf';
+    const resultSelector2022January = '.g [data-header-feature]';
 
-    let searchResults = $(`${resultSelectorOld}`).map((index, el) => parseResult(el)).toArray();
+    let searchResults = $(`${resultSelector2022January}`).map((index, el) => parseResult($(el).parent())).toArray();
     if (searchResults.length === 0) {
         searchResults = $(`${resultSelector2021January}`).map((index, el) => parseResult($(el).parent())).toArray();
+    }
+    if (searchResults.length === 0) {
+        searchResults = $(`${resultSelectorOld}`).map((index, el) => parseResult(el)).toArray();
     }
 
     return searchResults;
