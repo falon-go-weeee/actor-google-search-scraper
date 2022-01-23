@@ -1,4 +1,24 @@
 const cheerio = require('cheerio');
+const chrono = require('chrono-node');
+
+exports.extractDescriptionAndDate = (text) => {
+    let date;
+    let description = (text || '').trim();
+    // Parse all dates in the description
+    const parsedDates = chrono.parse(description);
+    if (parsedDates.length > 0) {
+        // we may use this parsed description date and add it to the output object
+        const [descriptionDate] = parsedDates;
+        // If first date is at the beginning of the description, we remove it
+        if (descriptionDate.index === 0) {
+            date = descriptionDate.date().toISOString(); // we use the refDate to avoid the timezone offset
+            description = description.slice(descriptionDate.text.length).trim();
+            // Removes leading non-word characters
+            description = description.replace(/^\W+/g, '');
+        }
+    }
+    return { description, date };
+};
 
 exports.extractPeopleAlsoAsk = ($) => {
     const peopleAlsoAsk = [];
