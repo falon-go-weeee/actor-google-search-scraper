@@ -44,6 +44,7 @@ exports.extractOrganicResults = ($) => {
                     url: $(siteLinkEl).find('h3 a').attr('href'),
                     ...extractDescriptionAndDate($(siteLinkEl).find('div').text()),
                 });
+            });
         }
 
         const productInfo = {};
@@ -71,7 +72,7 @@ exports.extractOrganicResults = ($) => {
             url: $(el).find('[data-header-feature="0"] a').first().attr('href'),
             displayedUrl: $(el).find('cite').eq(0).text(),
             ...extractDescriptionAndDate($(el).find('[data-content-feature="1"]').text()),
-            emphasizedKeywords: $(el).find('.IsZvec em, .IsZvec b').map((_i, el) => $(el).text().trim()).toArray(),
+            emphasizedKeywords: $(el).find('.VwiC3b em, .VwiC3b b').map((_i, el) => $(el).text().trim()).toArray(),
             siteLinks,
             productInfo,
         };
@@ -129,10 +130,10 @@ exports.extractPaidResults = ($) => {
                     // Seems Google removed decription in the new layout, let's keep it for now though
                     ...extractDescriptionAndDate(
                         $(siteLinkEl).parent('div').parent('h3').parent('div')
-                          .find('> div')
-                          .toArray()
-                          .map((d) => $(d).text())
-                          .join(' ') || null
+                            .find('> div')
+                            .toArray()
+                            .map((d) => $(d).text())
+                            .join(' ') || null,
                     ),
                 });
             });

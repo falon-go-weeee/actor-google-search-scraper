@@ -149,45 +149,53 @@ exports.ensureAccessToSerpProxy = async () => {
 exports.saveResults = async (dataset, results, csvFriendlyOutput) => {
     const datasetResults = csvFriendlyOutput ? buildCsvFriendlyResults(results) : results;
 
-    deduplicateKeywords(datasetResults);
-
     await dataset.pushData(datasetResults);
 };
 
-const deduplicateKeywords = (datasetResults) => {
-    if (Array.isArray(datasetResults)) {
-        datasetResults.forEach((result) => {
-            const { emphasizedKeywords } = result;
-            if (emphasizedKeywords) {
-                result.emphasizedKeywords = getUniqueItems(emphasizedKeywords);
-            }
-        });
-    } else {
-        const { organicResults, paidResults } = datasetResults;
-        deduplicateKeywords(organicResults);
-        deduplicateKeywords(paidResults);
-    }
-};
-
-const getUniqueItems = (items) => {
-    return Array.from(new Set(items));
-};
-
 const buildCsvFriendlyResults = (results) => {
-    const { organicResults, paidResults } = results;
+    const { organicResults, paidResults, searchQuery } = results;
 
-    const transformedResults = [
+    const organicAndPaidResults = [
         ...getTypedResults(organicResults, RESULT_TYPE.ORGANIC),
         ...getTypedResults(paidResults, RESULT_TYPE.PAID),
     ];
 
-    return transformedResults;
+    const organicAndPaidWithMetadata = getMetadataInjectedResults(organicAndPaidResults, searchQuery);
+
+    return organicAndPaidWithMetadata;
 };
 
 const getTypedResults = (results, type) => {
     const typedResults = results.map((result) => {
-        return { type, ...result };
+        const typedResult = {
+            type,
+            ...result,
+        };
+
+        delete typedResult.siteLinks; // exclude as it is an array of objects
+        typedResult.emphasizedKeywords = typedResult.emphasizedKeywords.join(', '); // stringify an array of keywords
+
+        return typedResult;
     });
 
     return typedResults;
+};
+
+const getMetadataInjectedResults = (results, searchQuery) => {
+    let position = 1;
+    const resultsWithMetadata = [];
+
+    for (const result of results) {
+        const metadataResult = {
+            searchQuery,
+            position,
+            ...result,
+        };
+
+        resultsWithMetadata.push(metadataResult);
+
+        position++;
+    }
+
+    return resultsWithMetadata;
 };

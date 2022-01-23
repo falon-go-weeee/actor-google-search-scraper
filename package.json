@@ -5,7 +5,6 @@
 	"main": "main.js",
 	"dependencies": {
 		"apify": "^2.1",
-		"chrono-node": "2.3.5",
 		"query-string": "^6.11.1",
 		"underscore": "^1.9.2"
 	},

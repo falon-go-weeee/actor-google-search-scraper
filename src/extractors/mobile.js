@@ -191,9 +191,9 @@ exports.extractOrganicResults = ($, hostname) => {
                         .eq(1)
                         .text()
                         .trim(),
-                        ...extractDescriptionAndDate($el.find('table span').first().text().trim()),
-                        emphasizedKeywords: $el.find('table span').first().find('em, b').map((_i, el) => $(el).text().trim())
-                          .toArray(),
+                    ...extractDescriptionAndDate($el.find('table span').first().text().trim()),
+                    emphasizedKeywords: $el.find('table span').first().find('em, b').map((_i, el) => $(el).text().trim())
+                        .toArray(),
                     siteLinks,
                 });
             });

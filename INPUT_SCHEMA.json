@@ -34,9 +34,9 @@
           "default": false
       },
       "csvFriendlyOutput": {
-        "title": "CSV friendly output",
+        "title": "CSV friendly output (1 result on 1 row)",
         "type": "boolean",
-        "description": "If checked, the crawler will return results in a structure suitable for CSV format.",
+        "description": "If checked, the crawler will return results in a structure suitable for CSV format. Only organic and paid results are included.",
         "default": false
       },
       "countryCode": {
