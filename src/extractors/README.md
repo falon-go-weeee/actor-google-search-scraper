@@ -41,6 +41,9 @@ const { extractResults } = require('@apify/google-extractors');
 The output format is the same as for [Google Search Results Scraper](https://github.com/apify/actor-google-search-scraper#Results) actor provided by Apify.
 
 ## Changelog
+2021-01-21 (1.2.2)
+- Fixed organic results for desktop (new layout)
+- Added `date` field
 2021-01-19 (1.2.0)
 - Fixed new layout for organic results
 - Added `emphasizedKeywords` field for each organic result
