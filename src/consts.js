@@ -18,3 +18,8 @@ exports.RESULT_TYPE = {
     ORGANIC: 'organic',
     PAID: 'paid',
 };
+
+exports.POSITION_FIELD_NAME = {
+    ORGANIC: 'position',
+    PAID: 'adPosition',
+};

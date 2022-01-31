@@ -2,7 +2,7 @@ const Apify = require('apify');
 const vm = require('vm');
 const _ = require('underscore');
 const queryString = require('query-string'); // TODO: Use Node default
-const { REQUIRED_PROXY_GROUP } = require('./consts');
+const { REQUIRED_PROXY_GROUP, POSITION_FIELD_NAME } = require('./consts');
 const {
     DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE,
     COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN,
@@ -13,15 +13,13 @@ const {
 
 const { utils: { log } } = Apify;
 
-exports.createSerpRequest = (url, page) => {
+exports.createSerpRequest = (url, userData) => {
     if (url.startsWith('https://')) url = url.replace('https://', 'http://');
     if (!url.includes('http://www.')) url = url.replace('http://', 'http://www.');
 
     return {
         url,
-        userData: {
-            page,
-        },
+        userData,
     };
 };
 
@@ -40,7 +38,13 @@ exports.getInitialRequests = ({
         .filter((item) => !!item)
         .map((queryOrUrl) => {
             // If it's search URL ...
-            if (GOOGLE_SEARCH_URL_REGEX.test(queryOrUrl)) return exports.createSerpRequest(queryOrUrl, 0);
+            const userData = {
+                page: 0,
+                organicResultsCount: 0,
+                paidResultsCount: 0,
+            };
+
+            if (GOOGLE_SEARCH_URL_REGEX.test(queryOrUrl)) return exports.createSerpRequest(queryOrUrl, userData);
 
             // Otherwise consider it as query term ...
             const domain = COUNTRY_CODE_TO_GOOGLE_SEARCH_DOMAIN[(countryCode || '').toUpperCase()]
@@ -55,7 +59,7 @@ exports.getInitialRequests = ({
             if (mobileResults) qs.xmobile = 1;
             if (includeUnfilteredResults) qs.filter = 0;
 
-            return exports.createSerpRequest(`http://www.${domain}/search?${queryString.stringify(qs)}`, 0);
+            return exports.createSerpRequest(`http://www.${domain}/search?${queryString.stringify(qs)}`, userData);
         });
 };
 
@@ -146,56 +150,53 @@ exports.ensureAccessToSerpProxy = async () => {
     }
 };
 
-exports.saveResults = async (dataset, results, csvFriendlyOutput) => {
-    const datasetResults = csvFriendlyOutput ? buildCsvFriendlyResults(results) : results;
+/**
+ *
+ * @param {Apify.Dataset} dataset
+ * @param {Any} results
+ * @param {Boolean} csvFriendlyOutput
+ * @param {{ organicResultsCount: Number, paidResultsCount: Number }} resultsCount
+ */
+exports.saveResults = async (dataset, results, csvFriendlyOutput, resultsCount) => {
+    const datasetResults = csvFriendlyOutput ? buildCsvFriendlyResults(results, resultsCount) : results;
 
     await dataset.pushData(datasetResults);
 };
 
-const buildCsvFriendlyResults = (results) => {
+const buildCsvFriendlyResults = (results, { organicResultsCount, paidResultsCount }) => {
     const { organicResults, paidResults, searchQuery } = results;
 
     const organicAndPaidResults = [
-        ...getTypedResults(organicResults, RESULT_TYPE.ORGANIC),
-        ...getTypedResults(paidResults, RESULT_TYPE.PAID),
+        ...getTypedResults(paidResults, searchQuery, RESULT_TYPE.PAID, paidResultsCount, POSITION_FIELD_NAME.PAID),
+        ...getTypedResults(organicResults, searchQuery, RESULT_TYPE.ORGANIC, organicResultsCount, POSITION_FIELD_NAME.ORGANIC),
     ];
 
-    const organicAndPaidWithMetadata = getMetadataInjectedResults(organicAndPaidResults, searchQuery);
-
-    return organicAndPaidWithMetadata;
+    return organicAndPaidResults;
 };
 
-const getTypedResults = (results, type) => {
+const getTypedResults = (results, searchQuery, type, resultsCount, positionFieldName) => {
+    // We want different position field names for organic and paid results (names are defined in constants).
+    const position = {};
+    position[positionFieldName] = resultsCount + 1;
+
     const typedResults = results.map((result) => {
         const typedResult = {
+            searchQuery,
             type,
+            ...position,
             ...result,
         };
 
-        delete typedResult.siteLinks; // exclude as it is an array of objects
-        typedResult.emphasizedKeywords = typedResult.emphasizedKeywords.join(', '); // stringify an array of keywords
+        // Exclude siteLinks as it is an array of objects.
+        delete typedResult.siteLinks;
+
+        // Stringify an array of keywords.
+        typedResult.emphasizedKeywords = typedResult.emphasizedKeywords.join(' | ');
+
+        position[positionFieldName]++;
 
         return typedResult;
     });
 
     return typedResults;
-};
-
-const getMetadataInjectedResults = (results, searchQuery) => {
-    let position = 1;
-    const resultsWithMetadata = [];
-
-    for (const result of results) {
-        const metadataResult = {
-            searchQuery,
-            position,
-            ...result,
-        };
-
-        resultsWithMetadata.push(metadataResult);
-
-        position++;
-    }
-
-    return resultsWithMetadata;
 };
