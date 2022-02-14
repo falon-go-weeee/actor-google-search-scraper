@@ -176,7 +176,67 @@ For each Google Search results page, the dataset will contain a single record, w
 
 ### How to get one search result per row
 
-If you're only interested in organic Google Search results and want to get just one organic or paid result per row on output, just query the `fields=searchQuery,organicResults` and `unwind=organicResults` query parameters to the API endpoint URL:
+#### Built-in approach
+
+If you're only interested in Google Search results and want to get one organic or paid result per row on output, simply set `true` for `csvFriendlyOutput` input field. This option is switched off by default as it excludes all additional fields apart from `searchQuery`, `organicResults` and `paidResults` to preserve CSV-friendly format. It also removes `siteLinks` array from both organic and paid results and stringifies `emphasizedKeywords` array. The resulting dataset stores an array of organic and paid results.
+
+An organic result is represented using the following format:
+
+```json
+{
+  "searchQuery": {
+    "term": "laptop",
+    "device": "DESKTOP",
+    "page": 1,
+    "type": "SEARCH",
+    "domain": "google.com",
+    "countryCode": "US",
+    "languageCode": "en",
+    "locationUule": null,
+    "resultsPerPage": 10
+  },
+  "type": "organic",
+  "position": 1,
+  "title": "Laptops & Notebook Computers - Best Buy",
+  "url": "https://www.bestbuy.com/site/computers-pcs/laptop-computers/abcat0502000.c?id=abcat0502000",
+  "displayedUrl": "https://www.bestbuy.com › Computers & Tablets",
+  "description": "Shop Best Buy for laptops. Work & play from anywhere with a notebook computer. We can help you find the best laptop for your specific needs in store and online.",
+  "emphasizedKeywords": "laptops | laptop",
+  "productInfo": {}
+}
+```
+
+Compared to a paid result example:
+
+```json
+{
+  "searchQuery": {
+    "term": "laptop",
+    "device": "DESKTOP",
+    "page": 7,
+    "type": "SEARCH",
+    "domain": "google.com",
+    "countryCode": "US",
+    "languageCode": "en",
+    "locationUule": null,
+    "resultsPerPage": 10
+  },
+  "type": "paid",
+  "adPosition": 1,
+  "title": "Affordable Laptops For Sale - Buy A Discounted Laptops",
+  "url": "https://rebornlaptops.com/category/laptops-and-computers",
+  "displayedUrl": "https://www.rebornlaptops.com/laptops",
+  "description": "laptop hplaptop cheaplaptop applelaptop amazongaming laptoplaptop dealslaptops walmartlaptop best buy",
+  "emphasizedKeywords": ""
+}
+```
+
+Note the difference in `type` field value and `position` vs `adPosition` fields in a paid result format. Paid result position is 
+calculated separately from the organic results and it's saved under `adPosition` field instead of `position` field.
+
+#### Alternative approach
+
+You can also pass query parameters `fields=searchQuery,organicResults` and `unwind=organicResults` to the API endpoint URL:
 
 ```
 https://api.apify.com/v2/datasets/[DATASET_ID]/items?format=[FORMAT]&fields=searchQuery,organicResults&unwind=organicResults
@@ -184,7 +244,7 @@ https://api.apify.com/v2/datasets/[DATASET_ID]/items?format=[FORMAT]&fields=sear
 
 The API will return a result like this (in JSON format):
 
-```json
+```javascript
 [
   {
     "searchQuery": {

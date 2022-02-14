@@ -33,6 +33,12 @@
           "description": "If checked, the crawler will return results for the mobile version of the Google Search. By default, desktop results are returned.",
           "default": false
       },
+      "csvFriendlyOutput": {
+        "title": "CSV friendly output (1 result on 1 row)",
+        "type": "boolean",
+        "description": "If checked, the crawler will return results in a structure suitable for CSV format. Only organic and paid results are included.",
+        "default": false
+      },
       "countryCode": {
           "title": "Country",
           "type": "string",

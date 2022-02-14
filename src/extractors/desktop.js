@@ -38,7 +38,7 @@ exports.extractOrganicResults = ($) => {
                 });
             });
         } else if ($(el).find(siteLinksSelOld).length > 0) {
-            $(el).find(siteLinksSelOld).each((i, siteLinkEl) => {
+            $(el).find(siteLinksSelOld).each((_i, siteLinkEl) => {
                 siteLinks.push({
                     title: $(siteLinkEl).find('h3').text(),
                     url: $(siteLinkEl).find('h3 a').attr('href'),
@@ -68,11 +68,11 @@ exports.extractOrganicResults = ($) => {
         }
 
         const searchResult = {
-            title: $(el).find('[data-header-feature="0"]').first().text(),
+            title: $(el).find('[data-header-feature="0"] h3').first().text(),
             url: $(el).find('[data-header-feature="0"] a').first().attr('href'),
             displayedUrl: $(el).find('cite').eq(0).text(),
             ...extractDescriptionAndDate($(el).find('[data-content-feature="1"]').text()),
-            emphasizedKeywords: $(el).find('.IsZvec em, .IsZvec b').map((i, el) => $(el).text().trim()).toArray(),
+            emphasizedKeywords: $(el).find('.VwiC3b em, .VwiC3b b').map((_i, element) => $(element).text().trim()).toArray(),
             siteLinks,
             productInfo,
         };
@@ -91,18 +91,18 @@ exports.extractOrganicResults = ($) => {
         searchResults = [...$(`${resultSelector2022January}`)].reduce((organicResultsSels, organicResultSel) => {
             // We  fetch the list of sub organic results contained in one organic result section
             // It may be hijacking the siteLinks and flattening them into the organicResultsSels
-            const subOrganicResultsSels = $(organicResultSel).map((i, organicItem) => parseResult($(organicItem).parent())).toArray();
+            const subOrganicResultsSels = $(organicResultSel).map((_i, organicItem) => parseResult($(organicItem).parent())).toArray();
             organicResultsSels.push(...subOrganicResultsSels);
             return organicResultsSels;
         }, []);
     }
 
     if (searchResults.length === 0) {
-        searchResults = $(`${resultSelector2021January}`).map((index, el) => parseResult($(el).parent())).toArray();
+        searchResults = $(`${resultSelector2021January}`).map((_i, el) => parseResult($(el).parent())).toArray();
     }
 
     if (searchResults.length === 0) {
-        searchResults = $(`${resultSelectorOld}`).map((index, el) => parseResult(el)).toArray();
+        searchResults = $(`${resultSelectorOld}`).map((_index, el) => parseResult(el)).toArray();
     }
 
     return searchResults;
@@ -119,20 +119,22 @@ exports.extractPaidResults = ($) => {
         ? newAds
         : oldAds;
 
-    $ads.each((index, el) => {
+    $ads.each((_index, el) => {
         const siteLinks = [];
         $(el).find('w-ad-seller-rating').remove();
         $(el).find('a').not('[data-pcu]').not('[ping]')
-            .each((i, siteLinkEl) => {
+            .each((_i, siteLinkEl) => {
                 siteLinks.push({
                     title: $(siteLinkEl).text(),
                     url: $(siteLinkEl).attr('href'),
                     // Seems Google removed decription in the new layout, let's keep it for now though
-                    ...extractDescriptionAndDate($(siteLinkEl).parent('div').parent('h3').parent('div')
-                        .find('> div')
-                        .toArray()
-                        .map((d) => $(d).text())
-                        .join(' ') || null),
+                    ...extractDescriptionAndDate(
+                        $(siteLinkEl).parent('div').parent('h3').parent('div')
+                            .find('> div')
+                            .toArray()
+                            .map((d) => $(d).text())
+                            .join(' ') || null,
+                    ),
                 });
             });
 
@@ -151,7 +153,7 @@ exports.extractPaidResults = ($) => {
             // The .eq(2) fixes getting "Ad." instead of the displayed URL.
             displayedUrl: $url.find('> div > span').eq(2).text(),
             ...extractDescriptionAndDate($description.text()),
-            emphasizedKeywords: $description.find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+            emphasizedKeywords: $description.find('em, b').map((_i, element) => $(element).text().trim()).toArray(),
             siteLinks,
         });
     });
@@ -162,13 +164,13 @@ exports.extractPaidResults = ($) => {
 exports.extractPaidProducts = ($) => {
     const products = [];
 
-    $('.commercial-unit-desktop-rhs .pla-unit').each((i, el) => {
+    $('.commercial-unit-desktop-rhs .pla-unit').each((_i, el) => {
         const headingEl = $(el).find('[role="heading"]');
         const siblingEls = headingEl.nextAll();
         const displayedUrlEl = siblingEls.last();
         const prices = [];
 
-        siblingEls.each((index, siblingEl) => {
+        siblingEls.each((_index, siblingEl) => {
             if (siblingEl !== displayedUrlEl[0]) prices.push($(siblingEl).text());
         });
 
@@ -196,7 +198,7 @@ exports.extractRelatedQueries = ($, hostname) => {
     const related = [];
 
     // 2021-02-25 - Tiny change #brs -> #bres
-    $('#brs a, #bres a').each((index, el) => {
+    $('#brs a, #bres a').each((_index, el) => {
         related.push({
             title: $(el).text(),
             url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),
