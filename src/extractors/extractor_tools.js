@@ -1,15 +1,35 @@
-const cheerio = require("cheerio");
+const cheerio = require('cheerio');
+const chrono = require('chrono-node');
+
+exports.extractDescriptionAndDate = (text) => {
+    let date;
+    let description = (text || '').trim();
+    // Parse all dates in the description
+    const parsedDates = chrono.parse(description);
+    if (parsedDates.length > 0) {
+        // we may use this parsed description date and add it to the output object
+        const [descriptionDate] = parsedDates;
+        // If first date is at the beginning of the description, we remove it
+        if (descriptionDate.index === 0) {
+            date = descriptionDate.date().toISOString(); // we use the refDate to avoid the timezone offset
+            description = description.slice(descriptionDate.text.length).trim();
+            // Removes leading non-word characters
+            description = description.replace(/^\W+/g, '');
+        }
+    }
+    return { description, date };
+};
 
 exports.extractPeopleAlsoAsk = ($) => {
     const peopleAlsoAsk = [];
 
     // HTML that we need is hidden in escaped script texts
-    const scriptMatches = $('html').html().match(/,\'\\x3cdiv class\\x3d[\s\S]+?\'\)\;\}\)/gi);
+    const scriptMatches = $('html').html().match(/,'\\x3cdiv class\\x3d[\s\S]+?'\);\}\)/gi);
 
     if (Array.isArray(scriptMatches)) {
         const htmls = scriptMatches.map((match) => {
             const escapedHtml = match.replace(',\'', '').replace('\');})', '');
-            const unescaped = escapedHtml.replace(/\\x([a-f0-9]{2})/g, (match, group) => {
+            const unescaped = escapedHtml.replace(/\\x(\w\w)/g, (_match, group) => {
                 const charCode = parseInt(group, 16);
                 return String.fromCharCode(charCode);
             });

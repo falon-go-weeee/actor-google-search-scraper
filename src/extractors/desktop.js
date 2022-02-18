@@ -1,5 +1,5 @@
 const { ensureItsAbsoluteUrl } = require('./ensure_absolute_url');
-const { extractPeopleAlsoAsk } = require('./extractor_tools');
+const { extractPeopleAlsoAsk, extractDescriptionAndDate } = require('./extractor_tools');
 
 exports.extractOrganicResults = ($) => {
     // Executed on a single organic result (row)
@@ -14,33 +14,35 @@ exports.extractOrganicResults = ($) => {
         const siteLinksSel2020 = '.St3GK a';
         const siteLinksSel2021January = 'table';
 
-        if ($(el).find(siteLinksSelOld).length > 0) {
-            $(el).find(siteLinksSelOld).each((i, siteLinkEl) => {
-                siteLinks.push({
-                    title: $(siteLinkEl).find('h3').text(),
-                    url: $(siteLinkEl).find('h3 a').attr('href'),
-                    description: $(siteLinkEl).find('div').text(),
+        if ($(el).parent().parent().siblings(siteLinksSel2021January).length > 0) {
+            $(el).parent().parent().siblings(siteLinksSel2021January)
+                .find('td .sld')
+                .each((i, siteLinkEl) => {
+                    siteLinks.push({
+                        title: $(siteLinkEl).find('a').text(),
+                        url: $(siteLinkEl).find('a').attr('href'),
+                        ...extractDescriptionAndDate($(siteLinkEl).find('.s').text()),
+                    });
                 });
-            });
         } else if ($(el).find(siteLinksSel2020).length > 0) {
             $(el).find(siteLinksSel2020).each((i, siteLinkEl) => {
                 siteLinks.push({
                     title: $(siteLinkEl).text(),
                     url: $(siteLinkEl).attr('href'),
                     // Seems Google removed decription in the new layout, let's keep it for now though
-                    description: $(siteLinkEl).parent('div').parent('h3').parent('div')
+                    ...extractDescriptionAndDate($(siteLinkEl).parent('div').parent('h3').parent('div')
                         .find('> div')
                         .toArray()
-                        .map(d => $(d).text())
-                        .join(' ') || null,
+                        .map((d) => $(d).text())
+                        .join(' ') || null),
                 });
             });
-        } else if ($(el).parent().parent().siblings(siteLinksSel2021January).length > 0) {
-            $(el).parent().parent().siblings(siteLinksSel2021January).find('td .sld').each((i, siteLinkEl) => {
+        } else if ($(el).find(siteLinksSelOld).length > 0) {
+            $(el).find(siteLinksSelOld).each((_i, siteLinkEl) => {
                 siteLinks.push({
-                    title: $(siteLinkEl).find('a').text(),
-                    url: $(siteLinkEl).find('a').attr('href'),
-                    description: $(siteLinkEl).find('.s').text()
+                    title: $(siteLinkEl).find('h3').text(),
+                    url: $(siteLinkEl).find('h3 a').attr('href'),
+                    ...extractDescriptionAndDate($(siteLinkEl).find('div').text()),
                 });
             });
         }
@@ -66,25 +68,41 @@ exports.extractOrganicResults = ($) => {
         }
 
         const searchResult = {
-            title: $(el).find('h3').eq(0).text(),
-            url: $(el).find('a').attr('href'),
+            title: $(el).find('[data-header-feature="0"] h3').first().text(),
+            url: $(el).find('[data-header-feature="0"] a').first().attr('href'),
             displayedUrl: $(el).find('cite').eq(0).text(),
-            description: $(el).find('.IsZvec').text(),
-            emphasizedKeywords: $(el).find('.IsZvec em, .IsZvec b').map((i, el) => $(el).text().trim()).toArray(),
+            ...extractDescriptionAndDate($(el).find('[data-content-feature="1"]').text()),
+            emphasizedKeywords: $(el).find('.VwiC3b em, .VwiC3b b').map((_i, element) => $(element).text().trim()).toArray(),
             siteLinks,
             productInfo,
         };
+
         return searchResult;
-    }
+    };
 
     // TODO: If you figure out how to reasonably generalize this, you get a medal
     const resultSelectorOld = '.g .rc';
     // We go one deeper to gain accuracy but then we have to go one up for the parsing
     const resultSelector2021January = '.g .tF2Cxc>.yuRUbf';
+    const resultSelector2022January = '.g [data-header-feature="0"]';
 
-    let searchResults = $(`${resultSelectorOld}`).map((index, el) => parseResult(el)).toArray();
+    let searchResults = [];
+    if ($(`${resultSelector2022January}`).length > 0) {
+        searchResults = [...$(`${resultSelector2022January}`)].reduce((organicResultsSels, organicResultSel) => {
+            // We  fetch the list of sub organic results contained in one organic result section
+            // It may be hijacking the siteLinks and flattening them into the organicResultsSels
+            const subOrganicResultsSels = $(organicResultSel).map((_i, organicItem) => parseResult($(organicItem).parent())).toArray();
+            organicResultsSels.push(...subOrganicResultsSels);
+            return organicResultsSels;
+        }, []);
+    }
+
     if (searchResults.length === 0) {
-        searchResults = $(`${resultSelector2021January}`).map((index, el) => parseResult($(el).parent())).toArray();
+        searchResults = $(`${resultSelector2021January}`).map((_i, el) => parseResult($(el).parent())).toArray();
+    }
+
+    if (searchResults.length === 0) {
+        searchResults = $(`${resultSelectorOld}`).map((_index, el) => parseResult(el)).toArray();
     }
 
     return searchResults;
@@ -101,20 +119,22 @@ exports.extractPaidResults = ($) => {
         ? newAds
         : oldAds;
 
-    $ads.each((index, el) => {
+    $ads.each((_index, el) => {
         const siteLinks = [];
         $(el).find('w-ad-seller-rating').remove();
         $(el).find('a').not('[data-pcu]').not('[ping]')
-            .each((i, siteLinkEl) => {
+            .each((_i, siteLinkEl) => {
                 siteLinks.push({
                     title: $(siteLinkEl).text(),
                     url: $(siteLinkEl).attr('href'),
                     // Seems Google removed decription in the new layout, let's keep it for now though
-                    description: $(siteLinkEl).parent('div').parent('h3').parent('div')
-                        .find('> div')
-                        .toArray()
-                        .map(d => $(d).text())
-                        .join(' ') || null,
+                    ...extractDescriptionAndDate(
+                        $(siteLinkEl).parent('div').parent('h3').parent('div')
+                            .find('> div')
+                            .toArray()
+                            .map((d) => $(d).text())
+                            .join(' ') || null,
+                    ),
                 });
             });
 
@@ -132,8 +152,8 @@ exports.extractPaidResults = ($) => {
             url: $url.attr('href'),
             // The .eq(2) fixes getting "Ad." instead of the displayed URL.
             displayedUrl: $url.find('> div > span').eq(2).text(),
-            description: $description.text(),
-            emphasizedKeywords: $description.find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+            ...extractDescriptionAndDate($description.text()),
+            emphasizedKeywords: $description.find('em, b').map((_i, element) => $(element).text().trim()).toArray(),
             siteLinks,
         });
     });
@@ -144,13 +164,13 @@ exports.extractPaidResults = ($) => {
 exports.extractPaidProducts = ($) => {
     const products = [];
 
-    $('.commercial-unit-desktop-rhs .pla-unit').each((i, el) => {
+    $('.commercial-unit-desktop-rhs .pla-unit').each((_i, el) => {
         const headingEl = $(el).find('[role="heading"]');
         const siblingEls = headingEl.nextAll();
         const displayedUrlEl = siblingEls.last();
         const prices = [];
 
-        siblingEls.each((index, siblingEl) => {
+        siblingEls.each((_index, siblingEl) => {
             if (siblingEl !== displayedUrlEl[0]) prices.push($(siblingEl).text());
         });
 
@@ -178,7 +198,7 @@ exports.extractRelatedQueries = ($, hostname) => {
     const related = [];
 
     // 2021-02-25 - Tiny change #brs -> #bres
-    $('#brs a, #bres a').each((index, el) => {
+    $('#brs a, #bres a').each((_index, el) => {
         related.push({
             title: $(el).text(),
             url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),

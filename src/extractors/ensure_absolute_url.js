@@ -1,5 +1,9 @@
+/**
+ * @param {string} maybeUrl
+ * @param {string} hostname
+ */
 exports.ensureItsAbsoluteUrl = (maybeUrl, hostname) => {
-    return hostname && maybeUrl && maybeUrl.startsWith('/')
-        ? `https://${hostname}${maybeUrl}`
-        : maybeUrl;
+    return new URL(maybeUrl, (
+        hostname.startsWith('http') ? '' : 'https://'
+    ).concat(hostname)).toString();
 };

@@ -7,7 +7,7 @@ const extractorsDesktop = require('./extractors/desktop');
 const extractorsMobile = require('./extractors/mobile');
 const {
     getInitialRequests, executeCustomDataFunction, getInfoStringFromResults, createSerpRequest,
-    logAsciiArt, createDebugInfo, ensureAccessToSerpProxy,
+    logAsciiArt, createDebugInfo, ensureAccessToSerpProxy, saveResults,
 } = require('./tools');
 
 const { log } = Apify.utils;
@@ -22,6 +22,7 @@ Apify.main(async () => {
         mobileResults,
         saveHtml,
         saveHtmlToKeyValueStore,
+        csvFriendlyOutput,
     } = input;
 
     // Check that user have access to SERP proxy.
@@ -52,8 +53,8 @@ Apify.main(async () => {
             request.userData.startedAt = new Date();
             log.info(`Querying "${parsedUrl.query.q}" page ${request.userData.page} ...`);
         }],
-        handlePageTimeoutSecs: 40,
-        requestTimeoutSecs: 50,
+        handlePageTimeoutSecs: 60,
+        requestTimeoutSecs: 180,
         handlePageFunction: async ({ request, response, body, $ }) => {
             if ($('#recaptcha').length) {
                 throw new Error('Captcha found, retrying...');
@@ -111,9 +112,11 @@ Apify.main(async () => {
             // Enqueue new page. Universal "next page" selector
             const nextPageUrl = $(`a[href*="start=${searchOffset}"]`).attr('href');
 
+            const { userData: { page, organicResultsCount, paidResultsCount } } = request;
+
             if (nextPageUrl) {
                 data.hasNextPage = true;
-                if (request.userData.page < maxPagesPerQuery - 1 && maxPagesPerQuery) {
+                if (page < maxPagesPerQuery - 1 && maxPagesPerQuery) {
                     const nextPageHref = url.format({
                         ...parsedUrl,
                         search: undefined,
@@ -122,7 +125,12 @@ Apify.main(async () => {
                             start: `${searchOffset}`,
                         },
                     });
-                    await requestQueue.addRequest(createSerpRequest(nextPageHref, request.userData.page + 1));
+                    const updatedUserData = {
+                        page: page + 1,
+                        organicResultsCount: organicResultsCount + data.organicResults.length,
+                        paidResultsCount: paidResultsCount + data.paidResults.length,
+                    };
+                    await requestQueue.addRequest(createSerpRequest(nextPageHref, updatedUserData));
                 } else {
                     log.info(`Not enqueueing next page for query "${parsedUrl.query.q}" because the "maxPagesPerQuery" limit has been reached.`);
                 }
@@ -130,7 +138,7 @@ Apify.main(async () => {
                 log.info(`This is the last page for query "${parsedUrl.query.q}". Next page button has not been found.`);
             }
 
-            await dataset.pushData(data);
+            await saveResults(dataset, data, csvFriendlyOutput, { organicResultsCount, paidResultsCount });
 
             // Log some nice info for user.
             log.info(`Finished query "${parsedUrl.query.q}" page ${nonzeroPage} (${getInfoStringFromResults(data)})`);

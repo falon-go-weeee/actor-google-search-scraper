@@ -1,5 +1,5 @@
 const { ensureItsAbsoluteUrl } = require('./ensure_absolute_url');
-const { extractPeopleAlsoAsk } = require('./extractor_tools');
+const { extractPeopleAlsoAsk, extractDescriptionAndDate } = require('./extractor_tools');
 
 /**
  * there are 3 possible mobile layouts, we need to find out
@@ -63,13 +63,13 @@ exports.extractOrganicResults = ($, hostname) => {
 
     if (layout === 'desktop-like') {
         // Not sure if #ires, .srg > div still works in some cases, left it there for now after I added the third selector (Lukas)
-        $('#ires, .srg > div, .mnr-c.xpd.O9g5cc.uUPGi').each((index, el) => {
+        $('#ires, .srg > div, .mnr-c.xpd.O9g5cc.uUPGi').each((_index, el) => {
             const siteLinks = [];
             const $el = $(el);
 
             $el
                 .find('[jsname].m8vZ3d a')
-                .each((i, siteLinkEl) => {
+                .each((_i, siteLinkEl) => {
                     siteLinks.push({
                         title: $(siteLinkEl).text(),
                         url: $(siteLinkEl).attr('href'),
@@ -94,13 +94,12 @@ exports.extractOrganicResults = ($, hostname) => {
                 productInfo.price = Number(productInfoPriceText.replace(/[^0-9.]/g, ''));
             }
 
-
             searchResults.push({
                 title: $el.find('a div[role="heading"]').text(),
                 url: $el.find('a').first().attr('href'),
                 displayedUrl: $el.find('span.qzEoUe').first().text(),
-                description: $el.find('div.yDYNvb').text(),
-                emphasizedKeywords: $el.find('div.yDYNvb').find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                ...extractDescriptionAndDate($el.find('div.yDYNvb').text()),
+                emphasizedKeywords: $el.find('div.yDYNvb').find('em, b').map((_i, element) => $(element).text().trim()).toArray(),
                 siteLinks,
                 productInfo,
             });
@@ -109,17 +108,17 @@ exports.extractOrganicResults = ($, hostname) => {
 
     if (layout === 'mobile') {
         $('#main > div:not([class])')
-            .filter((index, el) => {
+            .filter((_index, el) => {
                 return $(el).find('a[href^="/url"]').length > 0;
             })
-            .each((index, el) => {
+            .each((_index, el) => {
                 const $el = $(el);
 
                 const siteLinks = [];
 
                 $el
                     .find('.s3v9rd a')
-                    .each((i, siteLinkEl) => {
+                    .each((_i, siteLinkEl) => {
                         siteLinks.push({
                             title: $(siteLinkEl)
                                 .text()
@@ -143,8 +142,8 @@ exports.extractOrganicResults = ($, hostname) => {
                     title: $el.find('a > h3').eq(0).text().trim(),
                     url: getUrlFromParameter($el.find('a').first().attr('href'), hostname),
                     displayedUrl: $el.find('a > div').eq(0).text().trim(),
-                    description: $description.text().replace(/ · /g, '').trim(),
-                    emphasizedKeywords: $description.find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                    ...extractDescriptionAndDate($description.text().replace(/ · /g, '').trim()),
+                    emphasizedKeywords: $description.find('em, b').map((_i, element) => $(element).text().trim()).toArray(),
                     siteLinks,
                 });
             });
@@ -152,16 +151,16 @@ exports.extractOrganicResults = ($, hostname) => {
 
     if (layout === 'weblight') {
         $('body > div > div > div')
-            .filter((index, el) => {
+            .filter((_i, el) => {
                 return $(el).find('a[href*="googleweblight"],a[href^="/url"]').length > 0;
             })
-            .each((index, el) => {
+            .each((_i, el) => {
                 const $el = $(el);
                 const siteLinks = [];
 
                 $el
                     .find('a.M3vVJe')
-                    .each((i, siteLinkEl) => {
+                    .each((_index, siteLinkEl) => {
                         siteLinks.push({
                             title: $(siteLinkEl).text(),
                             url: getUrlFromParameter(
@@ -192,8 +191,9 @@ exports.extractOrganicResults = ($, hostname) => {
                         .eq(1)
                         .text()
                         .trim(),
-                    description: $el.find('table span').first().text().trim(),
-                    emphasizedKeywords: $el.find('table span').first().find('em, b').map((i, el) => $(el).text().trim()).toArray(),
+                    ...extractDescriptionAndDate($el.find('table span').first().text().trim()),
+                    emphasizedKeywords: $el.find('table span').first().find('em, b').map((_index, element) => $(element).text().trim())
+                        .toArray(),
                     siteLinks,
                 });
             });
@@ -209,8 +209,10 @@ exports.extractPaidResults = ($) => {
 
     if (layout === 'desktop-like') {
         $('.ads-fr').each((index, el) => {
+            const $el = $(el);
             const siteLinks = [];
-            $(el).find('a')
+
+            $el.find('a')
                 .not('[data-rw]')
                 .not('[ping]')
                 .not('[data-is-ad]')
@@ -225,63 +227,69 @@ exports.extractPaidResults = ($) => {
                     }
                 });
 
-            const $heading = $(el).find('div[role=heading]');
+            const $heading = $el.find('div[role=heading]');
             const $url = $heading.parent('a');
 
             ads.push({
-                title: $heading.find('span').length ? $heading.find('span').toArray().map(s => $(s).text()).join(' ') : $heading.text(),
+                title: $heading.find('span').length ? $heading.find('span').toArray().map((s) => $(s).text()).join(' ') : $heading.text(),
                 url: $url.attr('href'),
                 displayedUrl: $url.next('div').find('> span').eq(1).text()
-                    || $url.find('> div').eq(0).find('> div > span').eq(1).text(),
-                description: $url.parent().next('div').find('span').eq(0).text(),
-                emphasizedKeywords: $url.parent().next('div').find('span').eq(0).find('em, b')
-                    .map((i, el) => $(el).text().trim()).toArray(),
+                    || $url.find('> div').eq(0).find('> div > span').eq(1)
+                        .text(),
+                ...extractDescriptionAndDate($url.parent().next('div').find('span').eq(0)
+                    .text()),
+                emphasizedKeywords: $url.parent().next('div').find('span').eq(0)
+                    .find('em, b')
+                    .map((_i, element) => $(element).text().trim())
+                    .toArray(),
                 siteLinks,
             });
         });
 
         // Different desktop-like layout
         if (ads.length === 0) {
-            $('#tads .uEierd').each((i, el) => {
+            $('div[id^=tads] div.uEierd').each((_i, el) => {
+                const $el = $(el);
                 const siteLinks = [];
+
                 // This is for vertical sie links
-                $(el).find('.BmP5tf .MUxGbd a[data-hveid]').each((i, el) => {
+                $el.find('.BmP5tf .MUxGbd a[data-hveid]').each((_index, e) => {
                     siteLinks.push({
-                        title: $(el).text().trim(),
-                        url: $(el).attr('href'),
+                        title: $(e).text().trim(),
+                        url: $(e).attr('href'),
                         description: null,
-                    })
-                })
+                    });
+                });
 
                 // This is for horizontal site links
-                $(el).find('g-scrolling-carousel a').each((i, el) => {
+                $el.find('g-scrolling-carousel a').each((_index, e) => {
                     siteLinks.push({
-                        title: $(el).text().trim(),
-                        url: $(el).attr('href'),
+                        title: $(e).text().trim(),
+                        url: $(e).attr('href'),
                         description: null,
-                    })
-                })
+                    });
+                });
 
                 ads.push({
-                    title: $(el).find('[role="heading"]').text().trim(),
-                    url: $(el).find('a').attr('href'),
-                    displayedUrl: $(el).find('a .Zu0yb.UGIkD.qzEoUe').text().trim(),
-                    description: $(el).find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').text().trim(),
-                    emphasizedKeywords: $(el).find('.BmP5tf .MUxGbd.yDYNvb.lEBKkf').find('em, b')
-                        .map((i, el) => $(el).text().trim()).toArray(),
+                    title: $el.find('div[role="heading"]').text().trim(),
+                    url: $el.find('a').attr('href'),
+                    displayedUrl: $el.find('a span.Zu0yb.UGIkD.qzEoUe').text().trim(),
+                    ...extractDescriptionAndDate($el.find('div.w1C3Le div.MUxGbd.yDYNvb.lEBKkf').text().trim()),
+                    emphasizedKeywords: $el.find('div.w1C3Le div.MUxGbd.yDYNvb.lEBKkf').find('em, b')
+                        .map((_index, e) => $(e).text().trim()).toArray(),
                     siteLinks,
                 });
-            })
+            });
         }
     }
 
     if (layout === 'mobile') {
-        $('#main > div').filter((i, el) => $(el).find('div[role=heading]').length > 0)
+        $('#main > div').filter((_i, el) => $(el).find('div[role=heading]').length > 0)
             .each((i, el) => {
                 const $el = $(el);
 
                 const siteLinks = [];
-                $(el).find('> div > div > div > a').each((j, link) => {
+                $(el).find('> div > div > div > a').each((_j, link) => {
                     siteLinks.push({
                         title: $(link).text(),
                         url: $(link).attr('href'),
@@ -295,9 +303,9 @@ exports.extractPaidResults = ($) => {
                     title: $heading.text(),
                     url: $el.find('a[href*="aclk"]').attr('href'),
                     displayedUrl: $heading.next('div').find('> span > span').text(),
-                    description: $el.find('> div > div > div > span').text(),
-                    emphasizedKeywords:  $el.find('> div > div > div > span').find('em, b')
-                        .map((i, el) => $(el).text().trim()).toArray(),
+                    ...extractDescriptionAndDate($el.find('> div > div > div > span').text()),
+                    emphasizedKeywords: $el.find('> div > div > div > span').find('em, b')
+                        .map((_i, element) => $(element).text().trim()).toArray(),
                     siteLinks,
                 });
             });
@@ -309,13 +317,13 @@ exports.extractPaidResults = ($) => {
 exports.extractPaidProducts = ($) => {
     const products = [];
 
-    $('.shopping-carousel-container .pla-unit-container').each((i, el) => {
+    $('.shopping-carousel-container .pla-unit-container').each((_i, el) => {
         const headingEl = $(el).find('[role="heading"]');
         const siblingEls = headingEl.nextAll();
         const displayedUrlEl = siblingEls.last();
         const prices = [];
 
-        siblingEls.each((index, siblingEl) => {
+        siblingEls.each((_index, siblingEl) => {
             if (siblingEl !== displayedUrlEl[0]) prices.push($(siblingEl).text());
         });
 
@@ -340,21 +348,21 @@ exports.extractRelatedQueries = ($, hostname) => {
     const layout = determineLayout($);
 
     if (layout === 'desktop-like') {
-        $('#extrares').find('h2').nextAll('a').each((index, el) => {
+        $('#extrares').find('h2').nextAll('a').each((_index, el) => {
             related.push({
                 title: $(el).text().trim(),
                 url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),
             });
         });
         // another type of related searches
-        $('#bres span a').each((index, el) => {
+        $('#bres span a').each((_index, el) => {
             related.push({
                 title: $(el).text().trim(),
                 url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),
             });
         });
         // another type of related searches
-        $('#brs p a').each((index, el) => {
+        $('#brs p a').each((_index, el) => {
             related.push({
                 title: $(el).text().trim(),
                 url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),
@@ -363,7 +371,7 @@ exports.extractRelatedQueries = ($, hostname) => {
     }
 
     if (layout === 'mobile') {
-        $('a[href^="/search"].tHmfQe').each((index, el) => {
+        $('a[href^="/search"].tHmfQe').each((_index, el) => {
             related.push({
                 title: $(el).text().trim(),
                 url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),
@@ -372,7 +380,7 @@ exports.extractRelatedQueries = ($, hostname) => {
     }
 
     if (layout === 'weblight') {
-        $('a[href^="/search"].ZWRArf').each((index, el) => {
+        $('a[href^="/search"].ZWRArf').each((_index, el) => {
             related.push({
                 title: $(el).text().trim(),
                 url: ensureItsAbsoluteUrl($(el).attr('href'), hostname),

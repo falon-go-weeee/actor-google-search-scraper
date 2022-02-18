@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  node:
+    user: root
+    build:
+      context: .
+      target: dev
+      dockerfile: ./tools/docker/Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app
+      # NOTE: exclude local node_modules into docker container
+      - /app/node_modules/
+    command:
+      >
+        sh -i -c -e
+        "
+        npm run start:dev
+        "
+    network_mode: "host"

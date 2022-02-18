@@ -1,9 +1,9 @@
 {
     "extends": "@apify",
-    "globals": {
-        "describe": "readonly",
-        "test": "readonly",
-        "expect": "readonly"
+    "env": {
+        "node": true,
+        "jest": true,
+        "browser": false
     },
     "parserOptions": {
         "ecmaVersion": 2020

@@ -1,3 +1,10 @@
+2022-01-31
+- Implemented `csvFriendlyOutput` option
+- Handled missing `www.` on domains
+
+2022-01-21
+- Fixed organic results for desktop (new layout)
+
 2021-02-25
 - Hotfixed `relatedQueries` and `peopleAlsoAsk` in the new layout
 
