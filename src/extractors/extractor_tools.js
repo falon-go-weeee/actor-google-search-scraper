@@ -1,5 +1,6 @@
 const cheerio = require('cheerio');
 const chrono = require('chrono-node');
+const { ensureItsAbsoluteUrl } = require('./ensure_absolute_url');
 
 exports.extractDescriptionAndDate = (text) => {
     let date;
@@ -20,6 +21,9 @@ exports.extractDescriptionAndDate = (text) => {
     return { description, date };
 };
 
+/**
+ * @param {cheerio.CheerioAPI} $
+ */
 exports.extractPeopleAlsoAsk = ($) => {
     const peopleAlsoAsk = [];
 
@@ -36,7 +40,16 @@ exports.extractPeopleAlsoAsk = ($) => {
             return unescaped;
         });
 
-        let answerIndex = -1;
+        const questions = $('[data-q]').map((index, el) => {
+            const $el = $(el);
+            return {
+                index,
+                question: $el.attr('data-q').trim(),
+                link: $el.find('a[href^="/search"]').attr('href'),
+            };
+        }).get();
+
+        let answerIndex = 0;
 
         htmls.forEach((html, i) => {
             const $Internal = cheerio.load(html);
@@ -45,8 +58,6 @@ exports.extractPeopleAlsoAsk = ($) => {
             if ($Internal('[data-md]').length === 0) {
                 return;
             }
-            // count each answer
-            answerIndex += 1;
 
             // some answers are split into two contiguous divs
             const $nextDiv = (htmls[i + 1] && cheerio.load(htmls[i + 1])?.('.g')) ?? null;
@@ -59,33 +70,24 @@ exports.extractPeopleAlsoAsk = ($) => {
                 ? dateMatch[1]
                 : fullAnswer;
 
-            // Sometimes the question is not in the text but only in the href
-            let questionParsedFromHref;
-            const questionHref = $Internal('a[href^="/url"]').first().attr('href');
-            if (questionHref) {
-                const hrefMatch = new URL(questionHref, 'https://www.google.com');
-                if (hrefMatch.searchParams.get('q')) {
-                    questionParsedFromHref = hrefMatch.searchParams.get('q').replace(/\+/g, ' ');
-                }
-            }
-
             // Can be 'More results'
             const questionText = $Internal('a').last().text().trim();
 
             const result = {
-                question:
-                    // get the question from the main page by index
-                    $('#rso g-accordion-expander span ~ div').eq(answerIndex).text().trim()
-                    || questionParsedFromHref
-                    || questionText,
+                question: questions[answerIndex].question || questionText,
                 answer,
-                url: $nextDiv?.find('a').first().attr('href')
+                // N.B.: hardcoding it here, but should come from the hostname parameter, but it's
+                // a breaking change
+                url: ensureItsAbsoluteUrl(questions[answerIndex].link, 'www.google.com')
+                    || $nextDiv?.find('a').first().attr('href')
                     || $Internal('a[href]:not([href^="https://www.google"])').first().attr('href')
                     || null,
                 title: $nextDiv?.find('h3').first().text().trim() ?? $Internal('a.sXtWJb, h3').text().trim(),
                 date,
             };
+
             peopleAlsoAsk.push(result);
+            answerIndex += 1;
         });
     }
 
