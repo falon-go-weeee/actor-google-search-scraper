@@ -6,13 +6,13 @@
 	"dependencies": {
 		"apify": "^2.2.2",
 		"query-string": "^7.0.1",
-		"underscore": "^1.13.2"
+		"underscore": "^1.13.2",
+        "chrono-node": "^2.3.7"
 	},
 	"devDependencies": {
 		"@apify/eslint-config": "^0.2.2",
 		"eslint": "^8.9.0",
 		"query-string": "^7.1.1",
-		"chrono-node": "^2.3.7",
 		"dotenv": "^16.0.0",
 		"htmlparser2": "^4.0.0",
 		"jest": "^27.5.1"
