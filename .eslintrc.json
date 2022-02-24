@@ -1,8 +1,0 @@
-{
-    "extends": "@apify",
-    "globals": {
-        "describe": "readonly",
-        "test": "readonly",
-        "expect": "readonly"
-    }
-}

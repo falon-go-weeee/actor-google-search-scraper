@@ -4,24 +4,25 @@
 	"description": "This is a boilerplate of an Apify actor.",
 	"main": "main.js",
 	"dependencies": {
-		"apify": "^2.1",
-		"query-string": "^6.11.1",
-		"underscore": "^1.9.2",
-		"chrono-node": "^2.3.5"
+		"apify": "^2.2.2",
+		"query-string": "^7.0.1",
+		"underscore": "^1.13.2",
+        "chrono-node": "^2.3.7"
 	},
 	"devDependencies": {
-		"@apify/eslint-config": "^0.1.0",
-		"dotenv": "^10.0.0",
-		"eslint": "^7.7.0",
+		"@apify/eslint-config": "^0.2.2",
+		"eslint": "^8.9.0",
+		"query-string": "^7.1.1",
+		"dotenv": "^16.0.0",
 		"htmlparser2": "^4.0.0",
-		"jest": "^25.1.0"
+		"jest": "^27.5.1"
 	},
 	"scripts": {
 		"build-toc": "./node_modules/.bin/markdown-toc README.md -i",
 		"test": "jest",
 		"start": "node src/main",
-		"start:dev": "node -r dotenv/config src/main",
-		"lint": "./node_modules/.bin/eslint ./src"
+		"lint": "eslint ./src",
+		"start:dev": "node -r dotenv/config src/main"
 	},
 	"repository": {
 		"type": "git",

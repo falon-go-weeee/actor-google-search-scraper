@@ -1,5 +1,6 @@
 const cheerio = require('cheerio');
 const chrono = require('chrono-node');
+const { ensureItsAbsoluteUrl } = require('./ensure_absolute_url');
 
 exports.extractDescriptionAndDate = (text) => {
     let date;
@@ -20,6 +21,9 @@ exports.extractDescriptionAndDate = (text) => {
     return { description, date };
 };
 
+/**
+ * @param {cheerio.CheerioAPI} $
+ */
 exports.extractPeopleAlsoAsk = ($) => {
     const peopleAlsoAsk = [];
 
@@ -36,13 +40,27 @@ exports.extractPeopleAlsoAsk = ($) => {
             return unescaped;
         });
 
-        htmls.forEach((html) => {
+        const questions = $('[data-q]').map((index, el) => {
+            const $el = $(el);
+            return {
+                index,
+                question: $el.attr('data-q').trim(),
+                link: $el.find('a[href^="/search"]').attr('href'),
+            };
+        }).get();
+
+        let answerIndex = 0;
+
+        htmls.forEach((html, i) => {
             const $Internal = cheerio.load(html);
 
             // There are might be one extra post that is not really a question
             if ($Internal('[data-md]').length === 0) {
                 return;
             }
+
+            // some answers are split into two contiguous divs
+            const $nextDiv = (htmls[i + 1] && cheerio.load(htmls[i + 1])?.('.g')) ?? null;
 
             // String separation of date from text seems more plausible than all the selector variants
             const date = $Internal('.Od5Jsd, .kX21rb, .xzrguc').text().trim();
@@ -51,26 +69,25 @@ exports.extractPeopleAlsoAsk = ($) => {
             const answer = dateMatch
                 ? dateMatch[1]
                 : fullAnswer;
-            // Sometimes the question is not in the text but only in the href
-            let questionParsedFromHref;
-            const questionHref = $Internal('a').last().attr('href');
-            if (questionHref) {
-                const hrefMatch = questionHref.match(/q=(.+?)&|$/);
-                if (hrefMatch && hrefMatch[1]) {
-                    questionParsedFromHref = decodeURIComponent(hrefMatch[1]).replace(/\+/g, ' ');
-                }
-            }
+
             // Can be 'More results'
             const questionText = $Internal('a').last().text().trim();
 
             const result = {
-                question: questionParsedFromHref || questionText,
+                question: questions[answerIndex].question || questionText,
                 answer,
-                url: $Internal('a').attr('href'),
-                title: $Internal('a.sXtWJb, a h3').text().trim(),
+                // N.B.: hardcoding it here, but should come from the hostname parameter, but it's
+                // a breaking change
+                url: ensureItsAbsoluteUrl(questions[answerIndex].link, 'www.google.com')
+                    || $nextDiv?.find('a').first().attr('href')
+                    || $Internal('a[href]:not([href^="https://www.google"])').first().attr('href')
+                    || null,
+                title: $nextDiv?.find('h3').first().text().trim() ?? $Internal('a.sXtWJb, h3').text().trim(),
                 date,
             };
+
             peopleAlsoAsk.push(result);
+            answerIndex += 1;
         });
     }
 

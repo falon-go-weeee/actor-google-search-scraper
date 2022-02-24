@@ -14,11 +14,14 @@ const {
 const { utils: { log } } = Apify;
 
 exports.createSerpRequest = (url, userData) => {
-    if (url.startsWith('https://')) url = url.replace('https://', 'http://');
-    if (!url.includes('http://www.')) url = url.replace('http://', 'http://www.');
+    const newUrl = new URL(url);
+    newUrl.protocol = 'http:';
+    newUrl.hostname = newUrl.hostname.startsWith('www.')
+        ? newUrl.hostname
+        : 'www.'.concat(newUrl.hostname);
 
     return {
-        url,
+        url: newUrl.toString(),
         userData,
     };
 };

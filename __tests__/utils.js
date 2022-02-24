@@ -30,7 +30,7 @@ exports.dataSnapshotter = () => {
     };
 };
 
-exports.loadFixtureFile = name => promises.readFile(
+exports.loadFixtureFile = (name) => promises.readFile(
     join(__dirname, 'html', name), { encoding: 'utf8' },
 );
 
@@ -45,10 +45,10 @@ exports.loadFixtureHtmlWithCheerio = async (name) => {
         createReadStream(join(__dirname, 'html', `${name}.html`))
             .once('error', reject)
             .pipe(parser);
-    }).then(dom => load(dom));
+    }).then((dom) => load(dom));
 };
 
-exports.loadPair = async name => ({
+exports.loadPair = async (name) => ({
     $: await exports.loadFixtureHtmlWithCheerio(name),
     json: JSON.parse(await exports.loadFixtureFile(`${name}.json`)),
 });

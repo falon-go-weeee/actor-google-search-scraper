@@ -48,11 +48,10 @@ Apify.main(async () => {
         requestQueue,
         proxyConfiguration,
         maxConcurrency,
-        preNavigationHooks: [({ request }) => {
+        preNavigationHooks: [async ({ request }) => {
             const parsedUrl = url.parse(request.url, true);
             request.userData.startedAt = new Date();
             log.info(`Querying "${parsedUrl.query.q}" page ${request.userData.page} ...`);
-            return request;
         }],
         handlePageTimeoutSecs: 60,
         requestTimeoutSecs: 180,
