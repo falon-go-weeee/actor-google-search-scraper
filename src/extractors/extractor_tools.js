@@ -22,57 +22,89 @@ exports.extractDescriptionAndDate = (text) => {
 };
 
 /**
+ * Extract the encrypted contents from the inline Javascript payloads
+ *
+ * @param {cheerio.CheerioAPI} $
+ */
+const decodeScriptsContent = ($) => {
+    // HTML that we need is hidden in escaped script texts
+    const scriptMatches = $('html').html().match(/,'\\x3cdiv class\\x3d[\s\S]+?'\);\}\)/guim);
+
+    if (Array.isArray(scriptMatches)) {
+        return scriptMatches.map((match) => {
+            const escapedHtml = match
+                .replace(',\'', '')
+                .replace('\');})', '');
+
+            const unescaped = escapedHtml.replace(/\\x(\w{2})/g, (_match, group) => {
+                // parse ASCII hex characters representations to their plain counterpart
+                // \x3c => <
+                const charCode = parseInt(group, 16);
+
+                return String.fromCharCode(charCode);
+            }).replace(/\\u(\w{4})/g, (_match, group) => {
+                // convert unicode to HTML entities
+                // \u203a => &#8250;
+                return `&#${parseInt(group, 16)};`;
+            });
+
+            return cheerio.load(unescaped, { decodeEntities: true, xml: false });
+        });
+    }
+
+    return [];
+};
+
+exports.decodeScriptsContent = decodeScriptsContent;
+
+/**
  * @param {cheerio.CheerioAPI} $
  */
 exports.extractPeopleAlsoAsk = ($) => {
     const peopleAlsoAsk = [];
 
     // HTML that we need is hidden in escaped script texts
-    const scriptMatches = $('html').html().match(/,'\\x3cdiv class\\x3d[\s\S]+?'\);\}\)/gi);
+    const htmls = decodeScriptsContent($);
 
-    if (Array.isArray(scriptMatches)) {
-        const htmls = scriptMatches.map((match) => {
-            const escapedHtml = match.replace(',\'', '').replace('\');})', '');
-            const unescaped = escapedHtml.replace(/\\x(\w\w)/g, (_match, group) => {
-                const charCode = parseInt(group, 16);
-                return String.fromCharCode(charCode);
-            });
-            return unescaped;
-        });
+    if (!htmls?.length) {
+        return peopleAlsoAsk;
+    }
 
-        const questions = $('[data-q]').map((index, el) => {
-            const $el = $(el);
-            return {
-                index,
-                question: $el.attr('data-q').trim(),
-                link: $el.find('a[href^="/search"]').attr('href'),
-            };
-        }).get();
+    const questions = $('[data-q]').map((index, el) => {
+        const $el = $(el);
 
-        let answerIndex = 0;
+        return {
+            index,
+            question: $el.attr('data-q').trim(),
+            link: $el.find('a[href^="/search"]').attr('href'),
+        };
+    }).get();
 
-        htmls.forEach((html, i) => {
-            const $Internal = cheerio.load(html);
+    let answerIndex = 0;
 
-            // There are might be one extra post that is not really a question
-            if ($Internal('[data-md]').length === 0) {
-                return;
-            }
+    for (const [i, $Internal] of htmls.entries()) {
+        if ($Internal('[data-md]').length === 0) {
+            continue;
+        }
 
-            // some answers are split into two contiguous divs
-            const $nextDiv = (htmls[i + 1] && cheerio.load(htmls[i + 1])?.('.g')) ?? null;
+        const $nextDiv = htmls?.[i + 1]?.('.g');
 
-            // String separation of date from text seems more plausible than all the selector variants
-            const date = $Internal('.Od5Jsd, .kX21rb, .xzrguc').text().trim();
-            const fullAnswer = $Internal('[data-md]').text().trim();
-            const dateMatch = fullAnswer.match(new RegExp(`(.+)${date}$`));
-            const answer = dateMatch
-                ? dateMatch[1]
-                : fullAnswer;
+        if (!$nextDiv?.length) {
+            continue;
+        }
 
-            // Can be 'More results'
-            const questionText = $Internal('a').last().text().trim();
+        // String separation of date from text seems more plausible than all the selector variants
+        const date = $Internal('.Od5Jsd, .kX21rb, .xzrguc').text().trim();
+        const fullAnswer = $Internal('[data-md]').text().trim();
+        const dateMatch = fullAnswer.match(new RegExp(`(.+)${date}$`));
+        const answer = dateMatch
+            ? dateMatch[1]
+            : fullAnswer;
 
+        // Can be 'More results'
+        const questionText = $Internal('a').last().text().trim();
+
+        if (questions[answerIndex]?.question) {
             const result = {
                 question: questions[answerIndex].question || questionText,
                 answer,
@@ -82,13 +114,14 @@ exports.extractPeopleAlsoAsk = ($) => {
                     || $nextDiv?.find('a').first().attr('href')
                     || $Internal('a[href]:not([href^="https://www.google"])').first().attr('href')
                     || null,
-                title: $nextDiv?.find('h3').first().text().trim() ?? $Internal('a.sXtWJb, h3').text().trim(),
+                title: $nextDiv?.find('h3').first().text().trim()
+                    ?? $Internal('a.sXtWJb, h3').text().trim(),
                 date,
             };
 
             peopleAlsoAsk.push(result);
             answerIndex += 1;
-        });
+        }
     }
 
     return peopleAlsoAsk;
