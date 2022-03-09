@@ -2,7 +2,7 @@ const Apify = require('apify');
 const url = require('url');
 const {
     REQUIRED_PROXY_GROUP, GOOGLE_DEFAULT_RESULTS_PER_PAGE, DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE,
-    GOOGLE_SEARCH_DOMAIN_TO_COUNTRY_CODE, GOOGLE_SEARCH_URL_REGEX } = require('./consts');
+    GOOGLE_SEARCH_DOMAIN_TO_COUNTRY_CODE, GOOGLE_SEARCH_URL_REGEX, SERP_PROVIDER_HEADER } = require('./consts');
 const extractorsDesktop = require('./extractors/desktop');
 const extractorsMobile = require('./extractors/mobile');
 const {
@@ -56,8 +56,9 @@ Apify.main(async () => {
         handlePageTimeoutSecs: 60,
         requestTimeoutSecs: 180,
         handlePageFunction: async ({ request, response, body, $ }) => {
+            const serpProviderCode = response.headers[SERP_PROVIDER_HEADER];
             if ($('#recaptcha').length) {
-                throw new Error('Captcha found, retrying...');
+                throw `Captcha found. Provided by SERP provider: ${serpProviderCode}. Retrying...`;
             }
 
             request.userData.finishedAt = new Date();
@@ -88,6 +89,7 @@ Apify.main(async () => {
                 },
                 url: request.url,
                 hasNextPage: false,
+                serpProviderCode,
                 resultsTotal: extractors.extractTotalResults($),
                 relatedQueries: extractors.extractRelatedQueries($, host),
                 paidResults: extractors.extractPaidResults($),

@@ -12,6 +12,8 @@ exports.DEFAULT_GOOGLE_SEARCH_DOMAIN_COUNTRY_CODE = 'US';
 
 exports.REQUIRED_PROXY_GROUP = 'GOOGLE_SERP';
 
+exports.SERP_PROVIDER_HEADER = 'x-apify-serp-provider';
+
 exports.GOOGLE_DEFAULT_RESULTS_PER_PAGE = 10;
 
 exports.RESULT_TYPE = {
