@@ -51,7 +51,7 @@
                             },
                             {
                                 "label": "URL",
-                                "format": "text",
+                                "format": "link",
                                 "field": "url"
                             },
                             {
