@@ -1,0 +1,48 @@
+{
+    "actorSpecification": 1,
+    "name": "google-search-scraper",
+    "title": "Google Search Scraper",
+    "description": "Scrapes results from Google",
+    "version": "0.0.1",
+    "storages": {
+        "dataset": {
+            "actorSpecification": 1,
+            "title": "Google Search Scraper",
+            "description": "Too see all scraped properties, export the whole dataset or select All fields instead of Overview",
+            "views": {
+                "overview": {
+                    "title": "Overview",
+                    "description": "",
+                    "transformation": {
+                        "fields": [
+                            "searchQuery",
+                            "resultsTotal",
+                            "organicResults"
+                        ],
+                        "unwind": ["organicResults"]  
+                    },
+                    "display": {
+                        "component": "table",
+                        "columns": [
+                            {
+                                "label": "Title",
+                                "format": "text",
+                                "field": "title"
+                            },
+                            {
+                                "label": "URL",
+                                "format": "text",
+                                "field": "url"
+                            },
+                            {
+                                "label": "Description",
+                                "format": "text",
+                                "field": "description"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
