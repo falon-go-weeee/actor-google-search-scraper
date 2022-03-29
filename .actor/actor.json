@@ -25,6 +25,21 @@
                         "component": "table",
                         "columns": [
                             {
+                                "label": "Title",
+                                "format": "text",
+                                "field": "title"
+                            },
+                            {
+                                "label": "URL",
+                                "format": "link",
+                                "field": "url"
+                            },
+                            {
+                                "label": "Description",
+                                "format": "text",
+                                "field": "description"
+                            },
+                            {
                                 "label": "Search term",
                                 "format": "text",
                                 "field": "$searchQuery.term"
@@ -43,21 +58,6 @@
                                 "label": "Total results",
                                 "format": "number",
                                 "field": "$resultsTotal"
-                            },
-                            {
-                                "label": "Title",
-                                "format": "text",
-                                "field": "title"
-                            },
-                            {
-                                "label": "URL",
-                                "format": "link",
-                                "field": "url"
-                            },
-                            {
-                                "label": "Description",
-                                "format": "text",
-                                "field": "description"
                             }
                         ]
                     }
