@@ -25,6 +25,26 @@
                         "component": "table",
                         "columns": [
                             {
+                                "label": "Search term",
+                                "format": "text",
+                                "field": "$searchQuery.term"
+                            },
+                            {
+                                "label": "Domain",
+                                "format": "text",
+                                "field": "$searchQuery.domain"
+                            },
+                            {
+                                "label": "Page",
+                                "format": "number",
+                                "field": "$searchQuery.page"
+                            },
+                            {
+                                "label": "Total results",
+                                "format": "number",
+                                "field": "$resultsTotal"
+                            },
+                            {
                                 "label": "Title",
                                 "format": "text",
                                 "field": "title"
