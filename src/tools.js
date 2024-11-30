@@ -133,6 +133,8 @@ exports.ensureAccessToSerpProxy = async () => {
     const userInfo = await Apify.newClient().user().get();
     // Has access to group and nonzero limit.
     const hasGroupAllowed = userInfo.proxy.groups.filter((group) => group.name === REQUIRED_PROXY_GROUP).length > 0;
+    console.log(userInfo);
+    console.log(userInfo.limits);
     const maxSerps = userInfo.limits
         ? userInfo.limits.monthlyGoogleSerpRequests
         : userInfo.plan.maxMonthlyProxySerps;
